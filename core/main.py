@@ -42,18 +42,18 @@ logger = logging.getLogger("AGICore")
 class AGICore:
     def __init__(self):
         logger.info("🚀 Initializing AGI Core...")
-        
+
         # Загрузка конфига
         if not CONFIG_PATH.exists():
             logger.error(f"❌ Config file not found at {CONFIG_PATH}")
             logger.info("💡 Run 'python scripts/init_config.py' first!")
             sys.exit(1)
-            
+
         with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
             self.config = yaml.safe_load(f)
-            
+
         logger.info(f"✅ Configuration loaded from {CONFIG_PATH}")
-        
+
         # Инициализация оркестратора (исправленная версия)
         if ModelOrchestrator:
             try:
@@ -65,7 +65,7 @@ class AGICore:
                 self.orchestrator = None
         else:
             self.orchestrator = None
-            
+
         self.is_running = True
         self.active_agents = []
         self.task_log = []
@@ -140,7 +140,7 @@ class AGICore:
                 <div class="plugin-card" draggable="true" data-id="social_publisher" data-type="publisher">📢 Social Publisher</div>
                 <div class="plugin-card" draggable="true" data-id="self_learning" data-type="learning">🧠 Self Learning</div>
             </div>
-            
+
             <div class="metrics">
                 <div class="metric-box">
                     <div class="metric-val" id="vram-val">N/A</div>
@@ -151,7 +151,7 @@ class AGICore:
                     <div>Active Model</div>
                 </div>
             </div>
-            
+
             <div style="margin-top: 15px;">
                 <button class="btn" onclick="testConnection()">🔌 Test LM Studio</button>
                 <button class="btn btn-danger" onclick="unloadModels()">🗑 Unload All</button>
@@ -197,7 +197,7 @@ class AGICore:
                 }));
                 e.dataTransfer.effectAllowed = 'copy';
             });
-            
+
             draggable.addEventListener('dragend', () => {
                 draggable.classList.remove('dragging');
             });
@@ -216,7 +216,7 @@ class AGICore:
         dropZone.addEventListener('drop', e => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-            
+
             const data = e.dataTransfer.getData('text/plain');
             if (data) {
                 try {
@@ -233,7 +233,7 @@ class AGICore:
                 addLog(`Plugin ${pluginData.name} already active!`, 'warn');
                 return;
             }
-            
+
             const pluginEl = document.createElement('div');
             pluginEl.className = 'workspace-plugin';
             pluginEl.dataset.id = pluginData.id;
@@ -242,13 +242,13 @@ class AGICore:
                 <small style="color: #89b4fa;">Type: ${pluginData.type}</small><br>
                 <small style="color: #a6e3a1;">● Active</small>
             `;
-            
+
             pluginEl.addEventListener('click', () => {
                 if(confirm(`Send test request to ${pluginData.name}?`)) {
                     sendPluginTestRequest(pluginData.id);
                 }
             });
-            
+
             pluginEl.addEventListener('dblclick', () => {
                 if(confirm(`Deactivate ${pluginData.name}?`)) {
                     pluginEl.remove();
@@ -257,7 +257,7 @@ class AGICore:
                     updateStatus();
                 }
             });
-            
+
             dropZone.appendChild(pluginEl);
             activePlugins.add(pluginData.id);
             addLog(`Plugin activated: ${pluginData.name}`, 'info');
@@ -266,7 +266,7 @@ class AGICore:
 
         function sendPluginTestRequest(pluginId) {
             addLog(`Sending test request to ${pluginId}...`, 'info');
-            
+
             fetch(`/api/plugin/${pluginId}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -305,23 +305,23 @@ class AGICore:
             try {
                 const res = await fetch('/api/status');
                 const data = await res.json();
-                
+
                 document.getElementById('connection-status').innerText = data.lmstudio_connected ? "✅ LM Studio Connected" : "⚠️ LM Studio Offline";
                 document.getElementById('connection-status').style.background = data.lmstudio_connected ? "#a6e3a1" : "#fab387";
-                
+
                 document.getElementById('vram-val').innerText = data.vram_usage || "N/A";
                 document.getElementById('model-val').innerText = data.active_model || "None";
-                
+
                 // Обновляем список загруженных моделей
                 const modelsContainer = document.getElementById('loaded-models');
                 if (data.loaded_models && data.loaded_models.length > 0) {
-                    modelsContainer.innerHTML = data.loaded_models.map(m => 
+                    modelsContainer.innerHTML = data.loaded_models.map(m =>
                         `<span class="model-badge">${m}</span>`
                     ).join('');
                 } else {
                     modelsContainer.innerHTML = '<small style="color: #6c7086;">No models loaded</small>';
                 }
-                
+
                 if (!data.lmstudio_connected) {
                     addLog("Warning: LM Studio not connected!", "warn");
                 }
@@ -339,7 +339,7 @@ class AGICore:
                 const data = await res.json();
                 if (data.lmstudio_connected) {
                     addLog('✅ Successfully connected to LM Studio!', 'info');
-                    
+
                     // Тестовый запрос к модели
                     addLog('Sending test request to model...', 'info');
                     const status = await updateStatus();
@@ -355,7 +355,7 @@ class AGICore:
         // Unload Models
         async function unloadModels() {
             if(!confirm('Unload all models from memory?')) return;
-            
+
             addLog('Unloading all models...', 'info');
             // В реальной реализации здесь был бы API вызов
             setTimeout(() => {
@@ -366,7 +366,7 @@ class AGICore:
 
         setInterval(updateStatus, 2000);
         updateStatus();
-        
+
         // Graph Animation
         const canvas = document.getElementById('graphCanvas');
         const ctx = canvas.getContext('2d');
@@ -392,16 +392,16 @@ class AGICore:
 
     def start_web_server(self):
         """Запускает локальный веб-сервер для интерфейса"""
-        
+
         # Сохраняем HTML в статическую папку
         html_path = STATIC_DIR / "index.html"
         with open(html_path, 'w', encoding='utf-8') as f:
             f.write(self.generate_html())
-            
+
         class RequestHandler(SimpleHTTPRequestHandler):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, directory=str(STATIC_DIR), **kwargs)
-            
+
             def do_GET(self):
                 if self.path == '/':
                     self.path = '/index.html'
@@ -409,12 +409,12 @@ class AGICore:
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.end_headers()
-                    
+
                     # Получаем статус от оркестратора
                     orchestrator_status = {}
                     if self.server.core.orchestrator:
                         orchestrator_status = self.server.core.orchestrator.get_status()
-                    
+
                     status = {
                         "lmstudio_connected": self.server.core.check_lm_studio(),
                         "active_model": orchestrator_status.get("active_model", "None"),
@@ -429,28 +429,28 @@ class AGICore:
                     self.handle_plugin_api()
                     return
                 return super().do_GET()
-            
+
             def do_POST(self):
                 if self.path.startswith('/api/plugin/'):
                     self.handle_plugin_api()
                     return
                 return super().do_POST()
-            
+
             def handle_plugin_api(self):
                 """Обрабатывает запросы к API плагинов"""
                 import urllib.parse
                 parsed = urllib.parse.urlparse(self.path)
                 path_parts = parsed.path.split('/')
-                
+
                 if len(path_parts) >= 4 and path_parts[1] == 'api' and path_parts[2] == 'plugin':
                     plugin_name = path_parts[3]
-                    
+
                     # Читаем тело запроса для POST
                     content_length = int(self.headers.get('Content-Length', 0))
                     body = {}
                     if content_length > 0:
                         body = json.loads(self.rfile.read(content_length).decode())
-                    
+
                     # Здесь будет логика вызова плагинов
                     response = {
                         "success": True,
@@ -458,24 +458,24 @@ class AGICore:
                         "message": f"Plugin {plugin_name} called",
                         "data": body
                     }
-                    
+
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.end_headers()
                     self.wfile.write(json.dumps(response).encode())
                     return
-                
+
                 self.send_response(404)
                 self.end_headers()
 
         server_address = ('127.0.0.1', 8080)
         httpd = HTTPServer(server_address, RequestHandler)
         httpd.core = self # Передаем ссылку на ядро
-        
+
         url = "http://localhost:8080"
         logger.info(f"🌐 Visual Router available at {url}")
         webbrowser.open(url)
-        
+
         # Запуск в отдельном потоке
         thread = Thread(target=httpd.serve_forever)
         thread.daemon = True
@@ -494,13 +494,13 @@ def main():
         core = AGICore()
         core.check_lm_studio()
         core.start_web_server()
-        
+
         logger.info("✅ System Ready. Interface opened in browser.")
         logger.info("Press Ctrl+C to stop.")
-        
+
         # Запускаем цикл в фоне, не блокируя ввод полностью, но держа процесс живым
         core.run_simulation_loop()
-        
+
     except KeyboardInterrupt:
         logger.info("👋 Shutting down...")
         if hasattr(core, 'is_running'):
