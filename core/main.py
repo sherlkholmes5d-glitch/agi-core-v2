@@ -103,8 +103,11 @@ class AGICore:
         .plugin-card.dragging { opacity: 0.5; cursor: grabbing; }
         .drop-zone { border: 2px dashed #89b4fa; background: #181825; min-height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px; transition: all 0.3s; }
         .drop-zone.dragover { border-color: #a6e3a1; background: #1e2e20; border-style: solid; }
-        .workspace-plugin { background: #585b70; padding: 12px; margin: 8px; border-radius: 8px; cursor: pointer; border-left: 4px solid #89b4fa; animation: slideIn 0.3s ease; }
+        .workspace-plugin { background: #585b70; padding: 12px; margin: 8px; border-radius: 8px; cursor: pointer; border-left: 4px solid #89b4fa; animation: slideIn 0.3s ease; position: relative; }
         .workspace-plugin:hover { background: #6c7086; }
+        .workspace-plugin .delete-btn { position: absolute; top: 5px; right: 5px; background: #f38ba8; color: #1e1e2e; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+        .workspace-plugin:hover .delete-btn { opacity: 1; }
+        .workspace-plugin .delete-btn:hover { background: #eba0ac; transform: scale(1.1); }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         .log-entry { font-family: monospace; font-size: 0.9em; border-bottom: 1px solid #45475a; padding: 5px 0; }
         .log-entry.info { color: #89b4fa; }
@@ -238,24 +241,26 @@ class AGICore:
             pluginEl.className = 'workspace-plugin';
             pluginEl.dataset.id = pluginData.id;
             pluginEl.innerHTML = `
+                <button class="delete-btn" title="Remove plugin">×</button>
                 <strong>${pluginData.name}</strong><br>
                 <small style="color: #89b4fa;">Type: ${pluginData.type}</small><br>
                 <small style="color: #a6e3a1;">● Active</small>
             `;
 
-            pluginEl.addEventListener('click', () => {
-                if(confirm(`Send test request to ${pluginData.name}?`)) {
-                    sendPluginTestRequest(pluginData.id);
+            // Обработчик кнопки удаления
+            const deleteBtn = pluginEl.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Предотвращаем срабатывание клика по самому плагину
+                if(confirm(`Remove ${pluginData.name} from workspace?`)) {
+                    pluginEl.remove();
+                    activePlugins.delete(pluginData.id);
+                    addLog(`Plugin removed: ${pluginData.name}`, 'info');
+                    updateStatus(false);
                 }
             });
 
-            pluginEl.addEventListener('dblclick', () => {
-                if(confirm(`Deactivate ${pluginData.name}?`)) {
-                    pluginEl.remove();
-                    activePlugins.delete(pluginData.id);
-                    addLog(`Plugin deactivated: ${pluginData.name}`, 'info');
-                    updateStatus();
-                }
+            pluginEl.addEventListener('click', () => {
+                sendPluginTestRequest(pluginData.id);
             });
 
             dropZone.appendChild(pluginEl);
@@ -300,11 +305,20 @@ class AGICore:
             if (container.children.length > 50) container.lastChild.remove();
         }
 
-        // Status Polling
-        async function updateStatus() {
+        // Status Polling - Оптимизировано: проверка раз в 60 секунд
+        let lastCheck = 0;
+        async function updateStatus(force = false) {
+            const now = Date.now();
+            // Проверяем статус LM Studio только раз в минуту, если не форсировано
+            if (!force && now - lastCheck < 60000) {
+                // Обновляем только UI данные без запроса к бэкенду
+                return;
+            }
+            
             try {
                 const res = await fetch('/api/status');
                 const data = await res.json();
+                lastCheck = now;
 
                 document.getElementById('connection-status').innerText = data.lmstudio_connected ? "✅ LM Studio Connected" : "⚠️ LM Studio Offline";
                 document.getElementById('connection-status').style.background = data.lmstudio_connected ? "#a6e3a1" : "#fab387";
@@ -327,22 +341,26 @@ class AGICore:
                 }
             } catch (e) {
                 console.error(e);
-                addLog(`Status update error: ${e.message}`, 'error');
+                // Не логируем каждую ошибку статуса чтобы не спамить
             }
         }
 
-        // Test Connection
+        // Test Connection - с форсированным обновлением
         async function testConnection() {
             addLog('Testing LM Studio connection...', 'info');
             try {
+                // Форсируем проверку статуса
+                await updateStatus(true);
                 const res = await fetch('/api/status');
                 const data = await res.json();
                 if (data.lmstudio_connected) {
                     addLog('✅ Successfully connected to LM Studio!', 'info');
-
-                    // Тестовый запрос к модели
-                    addLog('Sending test request to model...', 'info');
-                    const status = await updateStatus();
+                    // Показываем загруженные модели
+                    if (data.loaded_models && data.loaded_models.length > 0) {
+                        addLog(`📦 Loaded models: ${data.loaded_models.join(', ')}`, 'info');
+                    } else {
+                        addLog('ℹ️ No models currently loaded. Drag a plugin to load a model.', 'info');
+                    }
                 } else {
                     addLog('⚠️ LM Studio is not running or unreachable', 'warn');
                     addLog('Please start LM Studio server on port 1234', 'warn');
@@ -352,20 +370,33 @@ class AGICore:
             }
         }
 
-        // Unload Models
+        // Unload Models - реальная выгрузка через API
         async function unloadModels() {
             if(!confirm('Unload all models from memory?')) return;
 
             addLog('Unloading all models...', 'info');
-            // В реальной реализации здесь был бы API вызов
-            setTimeout(() => {
-                addLog('Models unloaded (simulated)', 'info');
-                updateStatus();
-            }, 500);
+            try {
+                const res = await fetch('/api/unload-models', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    addLog('✅ All models unloaded successfully', 'info');
+                    // Форсируем обновление статуса
+                    await updateStatus(true);
+                } else {
+                    addLog(`❌ Error: ${data.error}`, 'error');
+                }
+            } catch (e) {
+                addLog(`❌ Unload error: ${e.message}`, 'error');
+            }
         }
 
-        setInterval(updateStatus, 2000);
-        updateStatus();
+        // Обновляем статус при загрузке страницы и раз в 5 секунд для UI (без запроса к бэкенду)
+        updateStatus(true);
+        setInterval(() => {
+            // Быстрое обновление UI без запроса к серверу
+            // Реальный запрос к бэкенду будет только раз в минуту
+            updateStatus(false);
+        }, 5000);
 
         // Graph Animation
         const canvas = document.getElementById('graphCanvas');
@@ -422,7 +453,11 @@ class AGICore:
                         "agents": self.server.core.active_agents,
                         "loaded_models": orchestrator_status.get("models", [])
                     }
-                    self.wfile.write(json.dumps(status).encode())
+                    try:
+                        self.wfile.write(json.dumps(status).encode())
+                    except (ConnectionAbortedError, BrokenPipeError):
+                        # Игнорируем ошибки разорванного соединения при закрытии браузера
+                        pass
                     return
                 elif self.path.startswith('/api/plugin/'):
                     # Обработка API запросов для плагинов
@@ -434,7 +469,45 @@ class AGICore:
                 if self.path.startswith('/api/plugin/'):
                     self.handle_plugin_api()
                     return
+                elif self.path == '/api/unload-models':
+                    # Обработка запроса на выгрузку всех моделей
+                    self.handle_unload_models()
+                    return
                 return super().do_POST()
+
+            def handle_unload_models(self):
+                """Выгружает все модели через оркестратор"""
+                try:
+                    if self.server.core.orchestrator:
+                        self.server.core.orchestrator.unload_all()
+                        response = {
+                            "success": True,
+                            "message": "All models unloaded successfully"
+                        }
+                        logger.info("✅ All models unloaded via API")
+                    else:
+                        response = {
+                            "success": False,
+                            "error": "Orchestrator not initialized"
+                        }
+                        logger.warning("⚠️ Cannot unload models: orchestrator not available")
+                    
+                    self.send_response(200)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    try:
+                        self.wfile.write(json.dumps(response).encode())
+                    except (ConnectionAbortedError, BrokenPipeError):
+                        pass
+                except Exception as e:
+                    logger.error(f"❌ Error unloading models: {e}")
+                    self.send_response(500)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    try:
+                        self.wfile.write(json.dumps({"success": False, "error": str(e)}).encode())
+                    except (ConnectionAbortedError, BrokenPipeError):
+                        pass
 
             def handle_plugin_api(self):
                 """Обрабатывает запросы к API плагинов"""
