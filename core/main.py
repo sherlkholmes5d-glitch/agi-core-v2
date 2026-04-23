@@ -93,71 +93,531 @@ class AGICore:
     <meta charset="UTF-8">
     <title>LM Studio AGI-Core | Visual Router</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #1e1e2e; color: #cdd6f4; margin: 0; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .status-badge { background: #a6e3a1; color: #1e1e2e; padding: 5px 10px; border-radius: 12px; font-weight: bold; }
-        .grid { display: grid; grid-template-columns: 250px 1fr 300px; gap: 20px; height: calc(100vh - 100px); }
-        .panel { background: #313244; border-radius: 12px; padding: 15px; overflow-y: auto; border: 1px solid #45475a; }
-        .plugin-card { background: #45475a; padding: 10px; margin-bottom: 10px; border-radius: 8px; cursor: grab; transition: transform 0.2s; user-select: none; }
-        .plugin-card:hover { transform: translateY(-2px); background: #585b70; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        .plugin-card.dragging { opacity: 0.5; cursor: grabbing; }
-        .drop-zone { border: 2px dashed #89b4fa; background: #181825; min-height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px; transition: all 0.3s; }
-        .drop-zone.dragover { border-color: #a6e3a1; background: #1e2e20; border-style: solid; }
-        .workspace-plugin { background: #585b70; padding: 12px; margin: 8px; border-radius: 8px; cursor: pointer; border-left: 4px solid #89b4fa; animation: slideIn 0.3s ease; position: relative; }
-        .workspace-plugin:hover { background: #6c7086; }
-        .workspace-plugin .delete-btn { position: absolute; top: 5px; right: 5px; background: #f38ba8; color: #1e1e2e; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
-        .workspace-plugin:hover .delete-btn { opacity: 1; }
-        .workspace-plugin .delete-btn:hover { background: #eba0ac; transform: scale(1.1); }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .log-entry { font-family: monospace; font-size: 0.9em; border-bottom: 1px solid #45475a; padding: 5px 0; }
-        .log-entry.info { color: #89b4fa; }
-        .log-entry.warn { color: #fab387; }
-        .log-entry.error { color: #f38ba8; }
-        .agent-active { color: #a6e3a1; font-weight: bold; }
-        h2 { margin-top: 0; color: #f9e2af; font-size: 1.2em; }
-        .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .metric-box { background: #181825; padding: 10px; border-radius: 8px; text-align: center; }
-        .metric-val { font-size: 1.5em; font-weight: bold; color: #cba6f7; }
-        .model-badge { display: inline-block; background: #89b4fa; color: #1e1e2e; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; margin: 2px; }
-        .btn { background: #89b4fa; color: #1e1e2e; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .btn:hover { background: #b4befe; }
-        .btn-danger { background: #f38ba8; }
-        .btn-danger:hover { background: #eba0ac; }
+        :root {
+            --bg-primary: #1e1e2e;
+            --bg-secondary: #313244;
+            --bg-tertiary: #45475a;
+            --text-primary: #cdd6f4;
+            --text-secondary: #a6adc8;
+            --accent-blue: #89b4fa;
+            --accent-green: #a6e3a1;
+            --accent-red: #f38ba8;
+            --accent-yellow: #f9e2af;
+            --accent-orange: #fab387;
+            --accent-purple: #cba6f7;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
+            margin: 0; 
+            padding: 20px; 
+        }
+        
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg-tertiary);
+        }
+        
+        .status-badge { 
+            background: var(--accent-green); 
+            color: var(--bg-primary); 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: 280px 1fr 350px; 
+            gap: 20px; 
+            height: calc(100vh - 120px); 
+        }
+        
+        .panel { 
+            background: var(--bg-secondary); 
+            border-radius: 12px; 
+            padding: 20px; 
+            overflow-y: auto; 
+            border: 1px solid var(--bg-tertiary);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        
+        /* Blueprint-style Plugin Cards */
+        .plugin-card { 
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, #585b70 100%);
+            padding: 15px; 
+            margin-bottom: 12px; 
+            border-radius: 8px; 
+            cursor: grab; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            border-left: 4px solid var(--accent-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plugin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(137, 180, 250, 0.1) 50%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .plugin-card:hover::before {
+            opacity: 1;
+        }
+        
+        .plugin-card:hover { 
+            transform: translateY(-3px) scale(1.02); 
+            background: linear-gradient(135deg, #585b70 0%, #6c7086 100%);
+            box-shadow: 0 8px 16px rgba(137, 180, 250, 0.2);
+            border-left-color: var(--accent-green);
+        }
+        
+        .plugin-card.dragging { 
+            opacity: 0.6; 
+            cursor: grabbing; 
+            transform: rotate(3deg) scale(1.05);
+        }
+        
+        .plugin-card .plugin-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .plugin-card .plugin-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .plugin-card .plugin-type {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Workspace Drop Zone */
+        .drop-zone { 
+            border: 3px dashed var(--bg-tertiary); 
+            background: linear-gradient(135deg, #181825 0%, #1e1e2e 100%);
+            min-height: 300px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-direction: column; 
+            padding: 30px; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .drop-zone::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+        
+        .drop-zone.dragover { 
+            border-color: var(--accent-green); 
+            background: linear-gradient(135deg, #1e2e20 0%, #181825 100%);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(166, 227, 161, 0.2);
+        }
+        
+        .drop-zone.dragover::after {
+            border-color: var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* Activated Plugin in Workspace */
+        .workspace-plugin { 
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, #585b70 100%);
+            padding: 16px; 
+            margin: 10px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            border-left: 5px solid var(--accent-blue);
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .workspace-plugin:hover { 
+            background: linear-gradient(135deg, #585b70 0%, #6c7086 100%);
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(137, 180, 250, 0.3);
+        }
+        
+        .workspace-plugin .delete-btn { 
+            position: absolute; 
+            top: 8px; 
+            right: 8px; 
+            background: var(--accent-red); 
+            color: var(--bg-primary); 
+            border: none; 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 16px; 
+            line-height: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .workspace-plugin:hover .delete-btn { 
+            opacity: 1; 
+            transform: scale(1.1);
+        }
+        
+        .workspace-plugin .delete-btn:hover { 
+            background: #eba0ac; 
+            transform: scale(1.2) rotate(90deg);
+        }
+        
+        @keyframes slideIn { 
+            from { 
+                opacity: 0; 
+                transform: translateX(-30px) scale(0.9); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateX(0) scale(1); 
+            } 
+        }
+        
+        /* Enhanced Logs with Grouping */
+        .log-group {
+            margin-bottom: 15px;
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .log-group-header {
+            background: var(--bg-tertiary);
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .log-group-header:hover {
+            background: #585b70;
+        }
+        
+        .log-group-content {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #181825;
+        }
+        
+        .log-entry { 
+            font-family: 'Consolas', 'Courier New', monospace; 
+            font-size: 0.85em; 
+            border-bottom: 1px solid var(--bg-tertiary); 
+            padding: 8px 15px; 
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-entry .log-time {
+            color: var(--text-secondary);
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        
+        .log-entry .log-message {
+            flex: 1;
+        }
+        
+        .log-entry.info { color: var(--accent-blue); }
+        .log-entry.warn { color: var(--accent-orange); background: rgba(250, 179, 135, 0.05); }
+        .log-entry.error { color: var(--accent-red); background: rgba(243, 139, 168, 0.05); }
+        .log-entry.success { color: var(--accent-green); background: rgba(166, 227, 161, 0.05); }
+        
+        .agent-active { color: var(--accent-green); font-weight: bold; }
+        
+        h2 { 
+            margin-top: 0; 
+            color: var(--accent-yellow); 
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .metrics { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-top: 20px; 
+        }
+        
+        .metric-box { 
+            background: linear-gradient(135deg, #181825 0%, #1e1e2e 100%);
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center;
+            border: 1px solid var(--bg-tertiary);
+            transition: transform 0.3s;
+        }
+        
+        .metric-box:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+        }
+        
+        .metric-val { 
+            font-size: 1.6em; 
+            font-weight: bold; 
+            color: var(--accent-purple);
+            font-family: 'Consolas', monospace;
+        }
+        
+        .metric-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .model-badge { 
+            display: inline-block; 
+            background: var(--accent-blue); 
+            color: var(--bg-primary); 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            font-size: 0.85em; 
+            margin: 4px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .model-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(137, 180, 250, 0.4);
+        }
+        
+        .btn { 
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #b4befe 100%);
+            color: var(--bg-primary); 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            margin: 5px;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(137, 180, 250, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-danger { 
+            background: linear-gradient(135deg, var(--accent-red) 0%, #eba0ac 100%);
+        }
+        
+        .btn-danger:hover { 
+            box-shadow: 0 4px 12px rgba(243, 139, 168, 0.4);
+        }
+        
+        /* Calendar Widget */
+        .calendar-widget {
+            margin-top: 20px;
+            background: #181825;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--bg-tertiary);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--accent-yellow);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+        
+        .calendar-day-name {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            padding: 5px;
+        }
+        
+        .calendar-day {
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .calendar-day:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .calendar-day.today {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            font-weight: bold;
+        }
+        
+        .calendar-day.has-event {
+            border: 2px solid var(--accent-green);
+        }
+        
+        /* Enhanced Task Graph */
+        .graph-container {
+            margin-top: 20px;
+            background: #181825;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--bg-tertiary);
+            height: 250px;
+        }
+        
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .graph-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+        
+        .stat-value {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🧠 LM Studio AGI-Core <span style="font-size:0.6em; color:#9399b2;">Visual Router</span></h1>
-        <div id="connection-status" class="status-badge">Checking...</div>
+        <h1>🧠 LM Studio AGI-Core <span style="font-size:0.6em; color:#9399b2;">| Visual Router (Blueprint Edition)</span></h1>
+        <div id="connection-status" class="status-badge">⏳ Checking...</div>
     </div>
 
     <div class="grid">
         <!-- Панель плагинов -->
         <div class="panel">
-            <h2>🧩 Plugins (Drag & Drop)</h2>
+            <h2>🧩 Plugins Library</h2>
             <div id="plugin-list">
-                <div class="plugin-card" draggable="true" data-id="gdd_architect" data-type="generator">📝 GDD Architect</div>
-                <div class="plugin-card" draggable="true" data-id="vision_bridge" data-type="processor">👁️ Vision Bridge</div>
-                <div class="plugin-card" draggable="true" data-id="internet_agent" data-type="agent">🌐 Internet Agent</div>
-                <div class="plugin-card" draggable="true" data-id="auto_hotkey" data-type="automation">🎮 AutoHotkey</div>
-                <div class="plugin-card" draggable="true" data-id="social_publisher" data-type="publisher">📢 Social Publisher</div>
-                <div class="plugin-card" draggable="true" data-id="self_learning" data-type="learning">🧠 Self Learning</div>
+                <div class="plugin-card" draggable="true" data-id="gdd_architect" data-type="generator">
+                    <span class="plugin-icon">📝</span>
+                    <span class="plugin-name">GDD Architect</span>
+                    <div class="plugin-type">Game Design Document Generator</div>
+                </div>
+                <div class="plugin-card" draggable="true" data-id="vision_bridge" data-type="processor">
+                    <span class="plugin-icon">👁️</span>
+                    <span class="plugin-name">Vision Bridge</span>
+                    <div class="plugin-type">Image Processing & Analysis</div>
+                </div>
+                <div class="plugin-card" draggable="true" data-id="internet_agent" data-type="agent">
+                    <span class="plugin-icon">🌐</span>
+                    <span class="plugin-name">Internet Agent</span>
+                    <div class="plugin-type">Web Search & Data Collection</div>
+                </div>
+                <div class="plugin-card" draggable="true" data-id="auto_hotkey" data-type="automation">
+                    <span class="plugin-icon">🎮</span>
+                    <span class="plugin-name">AutoHotkey</span>
+                    <div class="plugin-type">System Automation</div>
+                </div>
+                <div class="plugin-card" draggable="true" data-id="social_publisher" data-type="publisher">
+                    <span class="plugin-icon">📢</span>
+                    <span class="plugin-name">Social Publisher</span>
+                    <div class="plugin-type">Content Distribution</div>
+                </div>
+                <div class="plugin-card" draggable="true" data-id="self_learning" data-type="learning">
+                    <span class="plugin-icon">🧠</span>
+                    <span class="plugin-name">Self Learning</span>
+                    <div class="plugin-type">Adaptive Learning Module</div>
+                </div>
             </div>
 
             <div class="metrics">
                 <div class="metric-box">
                     <div class="metric-val" id="vram-val">N/A</div>
-                    <div>VRAM Used</div>
+                    <div class="metric-label">VRAM Used</div>
                 </div>
                 <div class="metric-box">
-                    <div class="metric-val" id="model-val" style="font-size: 0.9em;">None</div>
-                    <div>Active Model</div>
+                    <div class="metric-val" id="model-val" style="font-size: 0.8em;">None</div>
+                    <div class="metric-label">Active Model</div>
                 </div>
             </div>
 
-            <div style="margin-top: 15px;">
+            <div style="margin-top: 20px;">
                 <button class="btn" onclick="testConnection()">🔌 Test LM Studio</button>
                 <button class="btn btn-danger" onclick="unloadModels()">🗑 Unload All</button>
+            </div>
+            
+            <div class="calendar-widget">
+                <div class="calendar-header">
+                    <span id="calendar-month"></span>
+                    <div>
+                        <button class="btn" style="padding: 4px 8px; font-size: 0.8em;" onclick="prevMonth()">◀</button>
+                        <button class="btn" style="padding: 4px 8px; font-size: 0.8em;" onclick="nextMonth()">▶</button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
             </div>
         </div>
 
@@ -165,15 +625,27 @@ class AGICore:
         <div class="panel">
             <h2>⚡ Active Workspace</h2>
             <div id="workspace" class="drop-zone">
-                <p style="color: #6c7086;">Drag plugins here to activate<br><small>Click activated plugin to send test request</small></p>
+                <p style="color: #6c7086; text-align: center;">
+                    <span style="font-size: 2em;">🎯</span><br>
+                    Drag plugins here to activate<br>
+                    <small>Click activated plugin to send test request<br>Double-click to deactivate</small>
+                </p>
             </div>
+            
+            <div class="graph-container">
+                <div class="graph-header">
+                    <h3 style="margin: 0;">📊 Live Task Graph</h3>
+                    <div class="graph-stats">
+                        <span>Tasks: <span class="stat-value" id="task-count">0</span></span>
+                        <span>Active: <span class="stat-value" id="active-count">0</span></span>
+                    </div>
+                </div>
+                <canvas id="graphCanvas" width="100%" height="180" style="background:#1e1e2e; border-radius:8px;"></canvas>
+            </div>
+            
             <div style="margin-top: 20px;">
-                <h3>📊 Live Task Graph</h3>
-                <canvas id="graphCanvas" width="100%" height="200" style="background:#181825; border-radius:8px;"></canvas>
-            </div>
-            <div style="margin-top: 15px;">
                 <h3>📦 Loaded Models</h3>
-                <div id="loaded-models" style="min-height: 30px;"></div>
+                <div id="loaded-models" style="min-height: 40px; padding: 10px; background: #181825; border-radius: 8px;"></div>
             </div>
         </div>
 
@@ -185,41 +657,126 @@ class AGICore:
     </div>
 
     <script>
-        // Drag and Drop Logic с улучшенной поддержкой
+        // ============================================
+        // CALENDAR WIDGET
+        // ============================================
+        let currentCalendarDate = new Date();
+        
+        function renderCalendar() {
+            const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                               'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            document.getElementById('calendar-month').innerText = `${monthNames[month]} ${year}`;
+            
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            // Дни недели
+            dayNames.forEach(day => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day-name';
+                div.innerText = day;
+                grid.appendChild(div);
+            });
+            
+            // Первый день месяца
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const today = new Date();
+            
+            // Корректировка для понедельника (0 = Пн)
+            let startDay = firstDay.getDay() - 1;
+            if (startDay < 0) startDay = 6;
+            
+            // Пустые ячейки до первого дня
+            for (let i = 0; i < startDay; i++) {
+                const div = document.createElement('div');
+                grid.appendChild(div);
+            }
+            
+            // Дни месяца
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const div = document.createElement('div');
+                div.className = 'calendar-day';
+                div.innerText = day;
+                
+                // Сегодняшний день
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    div.classList.add('today');
+                }
+                
+                // Пример событий (можно расширить)
+                if (day % 7 === 0) {
+                    div.classList.add('has-event');
+                    div.title = 'Запланированная задача';
+                }
+                
+                grid.appendChild(div);
+            }
+        }
+        
+        function prevMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        }
+        
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        }
+        
+        // ============================================
+        // DRAG AND DROP LOGIC (Blueprint Style)
+        // ============================================
         const draggables = document.querySelectorAll('.plugin-card');
         const dropZone = document.getElementById('workspace');
-        let activePlugins = new Set();
-
+        let activePlugins = new Map(); // Используем Map для хранения данных о плагинах
+        
         draggables.forEach(draggable => {
             draggable.addEventListener('dragstart', (e) => {
                 draggable.classList.add('dragging');
-                e.dataTransfer.setData('text/plain', JSON.stringify({
+                const pluginData = {
                     id: draggable.dataset.id,
-                    name: draggable.innerText,
-                    type: draggable.dataset.type
-                }));
+                    name: draggable.querySelector('.plugin-name').innerText,
+                    type: draggable.dataset.type,
+                    icon: draggable.querySelector('.plugin-icon').innerText
+                };
+                e.dataTransfer.setData('text/plain', JSON.stringify(pluginData));
                 e.dataTransfer.effectAllowed = 'copy';
+                
+                // Визуальный эффект перетаскивания
+                setTimeout(() => {
+                    draggable.style.opacity = '0.5';
+                }, 0);
             });
-
+        
             draggable.addEventListener('dragend', () => {
                 draggable.classList.remove('dragging');
+                draggable.style.opacity = '1';
             });
         });
-
+        
         dropZone.addEventListener('dragover', e => {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
             dropZone.classList.add('dragover');
         });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
+        
+        dropZone.addEventListener('dragleave', e => {
+            // Проверяем, что уходим именно из drop-zone, а не внутрь неё
+            if (!dropZone.contains(e.relatedTarget)) {
+                dropZone.classList.remove('dragover');
+            }
         });
-
+        
         dropZone.addEventListener('drop', e => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-
+        
             const data = e.dataTransfer.getData('text/plain');
             if (data) {
                 try {
@@ -227,51 +784,81 @@ class AGICore:
                     addPluginToWorkspace(pluginData);
                 } catch (err) {
                     console.error('Error parsing drop data:', err);
+                    addLog('❌ Error parsing plugin data', 'error');
                 }
             }
         });
-
+        
         function addPluginToWorkspace(pluginData) {
             if (activePlugins.has(pluginData.id)) {
-                addLog(`Plugin ${pluginData.name} already active!`, 'warn');
+                addLog(`⚠️ Plugin "${pluginData.name}" already active!`, 'warn');
+                // Анимация уже активного плагина
+                const existingPlugin = document.querySelector(`.workspace-plugin[data-id="${pluginData.id}"]`);
+                if (existingPlugin) {
+                    existingPlugin.style.animation = 'none';
+                    existingPlugin.offsetHeight; /* trigger reflow */
+                    existingPlugin.style.animation = 'pulse 0.5s ease';
+                }
                 return;
             }
-
+        
             const pluginEl = document.createElement('div');
             pluginEl.className = 'workspace-plugin';
             pluginEl.dataset.id = pluginData.id;
             pluginEl.innerHTML = `
                 <button class="delete-btn" title="Remove plugin">×</button>
-                <strong>${pluginData.name}</strong><br>
-                <small style="color: #89b4fa;">Type: ${pluginData.type}</small><br>
-                <small style="color: #a6e3a1;">● Active</small>
+                <span style="font-size: 1.3em;">${pluginData.icon || '🔌'}</span>
+                <strong style="margin-left: 8px;">${pluginData.name}</strong><br>
+                <small style="color: #89b4fa; margin-left: 36px;">Type: ${pluginData.type}</small><br>
+                <small style="color: #a6e3a1; margin-left: 36px;">● Active</small>
             `;
-
-            // Обработчик кнопки удаления
+        
+            // Обработчик кнопки удаления - ИСПРАВЛЕНО
             const deleteBtn = pluginEl.querySelector('.delete-btn');
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Предотвращаем срабатывание клика по самому плагину
-                if(confirm(`Remove ${pluginData.name} from workspace?`)) {
-                    pluginEl.remove();
-                    activePlugins.delete(pluginData.id);
-                    addLog(`Plugin removed: ${pluginData.name}`, 'info');
-                    updateStatus(false);
+                e.preventDefault(); // Предотвращаем любые другие действия
+                
+                const pluginName = pluginData.name;
+                if(confirm(`Remove "${pluginName}" from workspace?`)) {
+                    // Анимация перед удалением
+                    pluginEl.style.transition = 'all 0.3s ease';
+                    pluginEl.style.transform = 'scale(0.8) translateX(100px)';
+                    pluginEl.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        pluginEl.remove();
+                        activePlugins.delete(pluginData.id);
+                        addLog(`🗑️ Plugin removed: ${pluginName}`, 'info');
+                        updateGraphStats();
+                        updateStatus(false);
+                    }, 300);
                 }
             });
-
-            pluginEl.addEventListener('click', () => {
-                sendPluginTestRequest(pluginData.id);
+        
+            // Клик по плагину - тестовый запрос
+            pluginEl.addEventListener('click', (e) => {
+                // Игнорируем клик если это был клик по кнопке удаления
+                if (e.target.classList.contains('delete-btn')) return;
+                sendPluginTestRequest(pluginData.id, pluginData.name);
             });
-
+            
+            // Двойной клик - деактивация
+            pluginEl.addEventListener('dblclick', (e) => {
+                if (e.target.classList.contains('delete-btn')) return;
+                deleteBtn.click();
+            });
+        
             dropZone.appendChild(pluginEl);
-            activePlugins.add(pluginData.id);
-            addLog(`Plugin activated: ${pluginData.name}`, 'info');
+            activePlugins.set(pluginData.id, pluginData);
+            addLog(`✅ Plugin activated: ${pluginData.name}`, 'success');
+            updateGraphStats();
             updateStatus();
         }
-
-        function sendPluginTestRequest(pluginId) {
-            addLog(`Sending test request to ${pluginId}...`, 'info');
-
+        
+        function sendPluginTestRequest(pluginId, pluginName) {
+            addLog(`📤 Sending test request to ${pluginName}...`, 'info');
+        
             fetch(`/api/plugin/${pluginId}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -284,34 +871,81 @@ class AGICore:
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    addLog(`✅ Plugin ${pluginId} responded successfully`, 'info');
-                    addLog(`Response: ${JSON.stringify(data.message)}`, 'info');
+                    addLog(`✅ Plugin ${pluginName} responded successfully`, 'success');
+                    if (data.message) {
+                        addLog(`📝 Response: ${JSON.stringify(data.message).substring(0, 200)}`, 'info');
+                    }
                 } else {
-                    addLog(`❌ Plugin ${pluginId} error: ${data.error}`, 'error');
+                    addLog(`❌ Plugin ${pluginName} error: ${data.error}`, 'error');
                 }
             })
             .catch(err => {
                 addLog(`❌ Error calling plugin: ${err.message}`, 'error');
             });
         }
-
-        // Logging
+        
+        // ============================================
+        // ENHANCED LOGGING WITH GROUPING
+        // ============================================
+        let logGroups = {};
+        let currentLogDate = null;
+        
         function addLog(msg, type='info') {
             const container = document.getElementById('log-container');
+            const now = new Date();
+            const dateKey = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString();
+            
+            // Создаем новую группу для нового дня
+            if (currentLogDate !== dateKey) {
+                currentLogDate = dateKey;
+                
+                const groupHeader = document.createElement('div');
+                groupHeader.className = 'log-group-header';
+                groupHeader.innerHTML = `<span>📅 ${dateKey}</span><span>▼</span>`;
+                groupHeader.onclick = function() {
+                    const content = this.nextElementSibling;
+                    content.style.maxHeight = content.style.maxHeight === '0px' ? '300px' : '0px';
+                    this.querySelector('span:last-child').innerText = content.style.maxHeight === '0px' ? '▶' : '▼';
+                };
+                
+                const groupContent = document.createElement('div');
+                groupContent.className = 'log-group-content';
+                
+                container.insertBefore(groupHeader, container.firstChild);
+                container.insertBefore(groupContent, groupHeader.nextSibling);
+            }
+            
+            // Получаем последнюю группу
+            const lastGroup = container.querySelector('.log-group-content:last-child');
+            if (!lastGroup) return;
+            
             const div = document.createElement('div');
             div.className = `log-entry ${type}`;
-            div.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
-            container.prepend(div);
-            if (container.children.length > 50) container.lastChild.remove();
+            div.innerHTML = `
+                <span class="log-time">${timeStr}</span>
+                <span class="log-message">${msg}</span>
+            `;
+            
+            lastGroup.insertBefore(div, lastGroup.firstChild);
+            
+            // Автопрокрутка к новому сообщению
+            lastGroup.scrollTop = 0;
+            
+            // Ограничиваем количество записей в группе
+            while (lastGroup.children.length > 150) {
+                lastGroup.removeChild(lastGroup.lastChild);
+            }
         }
-
-        // Status Polling - Оптимизировано: проверка раз в 60 секунд
+        
+        // ============================================
+        // STATUS POLLING - Оптимизировано: проверка раз в 60 секунд
+        // ============================================
         let lastCheck = 0;
         async function updateStatus(force = false) {
             const now = Date.now();
             // Проверяем статус LM Studio только раз в минуту, если не форсировано
             if (!force && now - lastCheck < 60000) {
-                // Обновляем только UI данные без запроса к бэкенду
                 return;
             }
             
@@ -319,68 +953,105 @@ class AGICore:
                 const res = await fetch('/api/status');
                 const data = await res.json();
                 lastCheck = now;
-
-                document.getElementById('connection-status').innerText = data.lmstudio_connected ? "✅ LM Studio Connected" : "⚠️ LM Studio Offline";
-                document.getElementById('connection-status').style.background = data.lmstudio_connected ? "#a6e3a1" : "#fab387";
-
+        
+                const statusEl = document.getElementById('connection-status');
+                if (data.lmstudio_connected) {
+                    statusEl.innerText = "✅ LM Studio Connected";
+                    statusEl.style.background = "var(--accent-green)";
+                } else {
+                    statusEl.innerText = "⚠️ LM Studio Offline";
+                    statusEl.style.background = "var(--accent-orange)";
+                }
+        
                 document.getElementById('vram-val').innerText = data.vram_usage || "N/A";
-                document.getElementById('model-val').innerText = data.active_model || "None";
-
+                
+                const modelVal = document.getElementById('model-val');
+                modelVal.innerText = data.active_model || "None";
+                if (data.active_model && data.active_model !== "None") {
+                    modelVal.style.color = "var(--accent-green)";
+                } else {
+                    modelVal.style.color = "var(--accent-purple)";
+                }
+        
                 // Обновляем список загруженных моделей
                 const modelsContainer = document.getElementById('loaded-models');
                 if (data.loaded_models && data.loaded_models.length > 0) {
                     modelsContainer.innerHTML = data.loaded_models.map(m =>
-                        `<span class="model-badge">${m}</span>`
+                        `<span class="model-badge">📦 ${m}</span>`
                     ).join('');
                 } else {
-                    modelsContainer.innerHTML = '<small style="color: #6c7086;">No models loaded</small>';
+                    modelsContainer.innerHTML = '<small style="color: #6c7086;">No models loaded in LM Studio</small>';
                 }
-
-                if (!data.lmstudio_connected) {
-                    addLog("Warning: LM Studio not connected!", "warn");
+        
+                if (!data.lmstudio_connected && force) {
+                    addLog("⚠️ Warning: LM Studio not connected!", "warn");
                 }
             } catch (e) {
-                console.error(e);
-                // Не логируем каждую ошибку статуса чтобы не спамить
+                if (force) {
+                    addLog(`❌ Status check error: ${e.message}`, 'error');
+                }
             }
         }
-
-        // Test Connection - с форсированным обновлением
+        
+        // ============================================
+        // TEST CONNECTION
+        // ============================================
         async function testConnection() {
-            addLog('Testing LM Studio connection...', 'info');
+            addLog('🔌 Testing LM Studio connection...', 'info');
             try {
-                // Форсируем проверку статуса
                 await updateStatus(true);
                 const res = await fetch('/api/status');
                 const data = await res.json();
+                
                 if (data.lmstudio_connected) {
-                    addLog('✅ Successfully connected to LM Studio!', 'info');
-                    // Показываем загруженные модели
+                    addLog('✅ Successfully connected to LM Studio!', 'success');
+                    
+                    // Получаем список моделей напрямую из LM Studio
+                    try {
+                        const modelsRes = await fetch('http://127.0.0.1:1234/v1/models');
+                        const modelsData = await modelsRes.json();
+                        
+                        if (modelsData.data && modelsData.data.length > 0) {
+                            const modelNames = modelsData.data.map(m => m.id);
+                            addLog(`📦 Available models in LM Studio: ${modelNames.length}`, 'info');
+                            modelNames.slice(0, 5).forEach(name => {
+                                addLog(`   • ${name}`, 'info');
+                            });
+                            if (modelNames.length > 5) {
+                                addLog(`   ... and ${modelNames.length - 5} more`, 'info');
+                            }
+                        }
+                    } catch (e) {
+                        addLog('ℹ️ Could not fetch model list', 'warn');
+                    }
+                    
                     if (data.loaded_models && data.loaded_models.length > 0) {
-                        addLog(`📦 Loaded models: ${data.loaded_models.join(', ')}`, 'info');
+                        addLog(`📦 Currently loaded: ${data.loaded_models.join(', ')}`, 'info');
                     } else {
-                        addLog('ℹ️ No models currently loaded. Drag a plugin to load a model.', 'info');
+                        addLog('ℹ️ No models currently loaded in memory', 'info');
                     }
                 } else {
                     addLog('⚠️ LM Studio is not running or unreachable', 'warn');
-                    addLog('Please start LM Studio server on port 1234', 'warn');
+                    addLog('💡 Please start LM Studio server on port 1234', 'warn');
                 }
             } catch (e) {
-                addLog(`Connection test failed: ${e.message}`, 'error');
+                addLog(`❌ Connection test failed: ${e.message}`, 'error');
             }
         }
-
-        // Unload Models - реальная выгрузка через API
+        
+        // ============================================
+        // UNLOAD MODELS
+        // ============================================
         async function unloadModels() {
-            if(!confirm('Unload all models from memory?')) return;
-
-            addLog('Unloading all models...', 'info');
+            if(!confirm('Unload all models from LM Studio memory?')) return;
+        
+            addLog('🗑️ Unloading all models...', 'info');
             try {
                 const res = await fetch('/api/unload-models', { method: 'POST' });
                 const data = await res.json();
+                
                 if (data.success) {
-                    addLog('✅ All models unloaded successfully', 'info');
-                    // Форсируем обновление статуса
+                    addLog('✅ All models unloaded successfully', 'success');
                     await updateStatus(true);
                 } else {
                     addLog(`❌ Error: ${data.error}`, 'error');
@@ -389,32 +1060,128 @@ class AGICore:
                 addLog(`❌ Unload error: ${e.message}`, 'error');
             }
         }
-
-        // Обновляем статус при загрузке страницы и раз в 5 секунд для UI (без запроса к бэкенду)
-        updateStatus(true);
-        setInterval(() => {
-            // Быстрое обновление UI без запроса к серверу
-            // Реальный запрос к бэкенду будет только раз в минуту
-            updateStatus(false);
-        }, 5000);
-
-        // Graph Animation
+        
+        // ============================================
+        // GRAPH STATS & ANIMATION
+        // ============================================
+        function updateGraphStats() {
+            const count = activePlugins.size;
+            document.getElementById('task-count').innerText = count;
+            document.getElementById('active-count').innerText = count;
+        }
+        
         const canvas = document.getElementById('graphCanvas');
         const ctx = canvas.getContext('2d');
+        
+        // Устанавливаем правильный размер canvas
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width - 30;
+            canvas.height = 180;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
         let offset = 0;
+        let nodes = [];
+        
+        // Создаем узлы для графа
+        function initNodes() {
+            nodes = [];
+            const nodeCount = 8;
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push({
+                    x: (canvas.width / (nodeCount + 1)) * (i + 1),
+                    y: canvas.height / 2 + (Math.random() - 0.5) * 40,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5
+                });
+            }
+        }
+        initNodes();
+        
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Рисуем связи
+            ctx.strokeStyle = 'rgba(137, 180, 250, 0.3)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            // Рисуем волны
             ctx.strokeStyle = '#89b4fa';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            for(let i=0; i<canvas.width; i+=10) {
-                ctx.lineTo(i, 50 + Math.sin((i+offset)/20)*20);
+            for(let i = 0; i <= canvas.width; i += 5) {
+                const y = canvas.height / 2 + Math.sin((i + offset) / 30) * 30 + 
+                          Math.sin((i + offset * 1.5) / 50) * 15;
+                if (i === 0) {
+                    ctx.moveTo(i, y);
+                } else {
+                    ctx.lineTo(i, y);
+                }
             }
             ctx.stroke();
-            offset += 2;
+            
+            // Рисуем узлы
+            nodes.forEach(node => {
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                // Отталкивание от границ
+                if (node.x < 20 || node.x > canvas.width - 20) node.vx *= -1;
+                if (node.y < 20 || node.y > canvas.height - 20) node.vy *= -1;
+                
+                // Свечение
+                const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, 12);
+                gradient.addColorStop(0, 'rgba(137, 180, 250, 0.8)');
+                gradient.addColorStop(1, 'rgba(137, 180, 250, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Ядро узла
+                ctx.fillStyle = '#89b4fa';
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            offset += 1.5;
             requestAnimationFrame(drawGraph);
         }
         drawGraph();
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        // Рендерим календарь
+        renderCalendar();
+        
+        // Обновляем статус при загрузке
+        updateStatus(true);
+        
+        // Периодическое обновление (UI каждые 5 сек, реальный запрос раз в минуту)
+        setInterval(() => {
+            updateStatus(false);
+        }, 5000);
+        
+        addLog('🚀 Visual Router initialized', 'success');
+        addLog('📅 Calendar ready', 'info');
+        addLog('🎯 Drag plugins to workspace to activate', 'info');
     </script>
 </body>
 </html>
