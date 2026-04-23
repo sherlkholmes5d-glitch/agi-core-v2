@@ -1,0 +1,154 @@
+# LM Studio AGI-Core Configuration
+# Optimized for RTX 3070 Ti 16GB + i7-12700K + 48GB RAM
+
+server:
+  port: 1234
+  host: "127.0.0.1"
+  max_parallel_requests: 4
+  cors_enabled: true
+  api_key: ""  # Optional security
+
+models:
+  # Fast model for quick tasks
+  llama_3_2_3b:
+    path: "lmstudio-community/llama-3.2-3b-instruct"
+    size_gb: 2.0
+    context_length: 32768
+    gpu_offload: 100
+    batch_size: 1024
+    cpu_threads: 8
+    temperature: 0.7
+    top_p: 0.9
+    use_for: ["quick_chat", "simple_tasks", "black_mode"]
+    priority: "high"
+  
+  # Coding specialist
+  deepseek_coder_v2:
+    path: "mad-lab-ai/deepseek-coder-v2-lite-instruct"
+    size_gb: 10.4
+    context_length: 65536
+    gpu_offload: 100
+    batch_size: 2048
+    cpu_threads: 10
+    temperature: 0.2
+    top_p: 0.95
+    repetition_penalty: 1.1
+    use_for: ["coding", "debugging", "code_review", "gdd_architect"]
+    priority: "high"
+  
+  # Complex reasoning and analysis
+  qwen_35b:
+    path: "mradermacher/huihui-qwen3.5-35b-a3b"
+    size_gb: 13.5
+    quantization: "IQ3_XXS"
+    context_length: 32768
+    gpu_offload: 85
+    cpu_threads: 12
+    batch_size: 1024
+    temperature: 0.4
+    top_p: 0.9
+    use_for: ["complex_reasoning", "analysis", "planning", "brainstorm"]
+    priority: "medium"
+  
+  # Creative tasks
+  mixtral_8x7b:
+    path: "continuum-ai/mixtral-8x7b-instruct-compact"
+    size_gb: 21.4
+    context_length: 32768
+    gpu_offload: 70
+    cpu_threads: 12
+    temperature: 0.8
+    top_p: 0.95
+    use_for: ["creative_writing", "storytelling", "marketing"]
+    priority: "low"
+  
+  # Vision tasks
+  llava_8b:
+    path: "lmstudio-community/llava-v1.6-mistral-7b"
+    size_gb: 5.7
+    context_length: 8192
+    gpu_offload: 100
+    batch_size: 512
+    temperature: 0.5
+    use_for: ["vision", "game_analyzer", "screenshot_analysis"]
+    priority: "medium"
+
+memory:
+  vram_limit_gb: 14.0
+  ram_limit_gb: 40.0
+  kv_cache:
+    type: "q8_0"
+    offload_to_gpu: true
+    unified: true
+  flash_attention: true
+  mmap: true
+  mlock: false
+
+rag:
+  enabled: true
+  embedding_model: "nomic-embed-text-v1.5"
+  retrieval_limit: 10
+  affinity_threshold: 0.5
+  chunk_size: 512
+  chunk_overlap: 50
+  vector_store: "faiss"
+  sqlite_db: "data/long_term_memory.db"
+  chroma_db: "data/vector_index"
+
+orchestrator:
+  strategy: "lazy"
+  cache_size: 2
+  vram_threshold: 0.85
+  preload_models:
+    - "llama_3_2_3b"
+    - "deepseek_coder_v2"
+  task_routing:
+    coding: "deepseek_coder_v2"
+    analysis: "qwen_35b"
+    creative: "mixtral_8x7b"
+    quick: "llama_3_2_3b"
+    vision: "llava_8b"
+    gdd: "deepseek_coder_v2"
+    brainstorm: "qwen_35b"
+
+plugins:
+  enabled:
+    - "gdd_architect"
+    - "vision_bridge"
+    - "internet_agent"
+    - "auto_hotkey"
+    - "social_publisher"
+    - "self_learning"
+  directory: "plugins"
+  hot_reload: true
+
+monitoring:
+  enabled: true
+  log_level: "INFO"
+  dashboard_port: 8080
+  metrics_interval: 60
+  export_format: ["json", "obsidian_canvas"]
+
+features:
+  visual_router: true
+  black_mode: true
+  human_emulation: true
+  ssot_prompting: true
+  auto_optimize: true
+  github_sync: true
+
+rag:
+  enabled: true
+  retrieval_limit: 10
+  affinity_threshold: 0.5
+  chunk_size: 512
+
+orchestrator:
+  strategy: "lazy"
+  vram_threshold: 0.85
+  cache_size: 2
+
+logging:
+  level: "INFO"
+  file: "logs/app.log"
+  max_size_mb: 10

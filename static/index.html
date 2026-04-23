@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>LM Studio AGI-Core | Visual Router</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #1e1e2e; color: #cdd6f4; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .status-badge { background: #a6e3a1; color: #1e1e2e; padding: 5px 10px; border-radius: 12px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: 250px 1fr 300px; gap: 20px; height: calc(100vh - 100px); }
+        .panel { background: #313244; border-radius: 12px; padding: 15px; overflow-y: auto; border: 1px solid #45475a; }
+        .plugin-card { background: #45475a; padding: 10px; margin-bottom: 10px; border-radius: 8px; cursor: grab; transition: transform 0.2s; }
+        .plugin-card:hover { transform: translateY(-2px); background: #585b70; }
+        .drop-zone { border: 2px dashed #89b4fa; background: #181825; min-height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .drop-zone.dragover { border-color: #a6e3a1; background: #1e2e20; }
+        .log-entry { font-family: monospace; font-size: 0.9em; border-bottom: 1px solid #45475a; padding: 5px 0; }
+        .log-entry.info { color: #89b4fa; }
+        .log-entry.warn { color: #fab387; }
+        .agent-active { color: #a6e3a1; font-weight: bold; }
+        h2 { margin-top: 0; color: #f9e2af; }
+        .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .metric-box { background: #181825; padding: 10px; border-radius: 8px; text-align: center; }
+        .metric-val { font-size: 1.5em; font-weight: bold; color: #cba6f7; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧠 LM Studio AGI-Core <span style="font-size:0.6em; color:#9399b2;">Visual Router</span></h1>
+        <div id="connection-status" class="status-badge">Checking...</div>
+    </div>
+
+    <div class="grid">
+        <!-- Панель плагинов -->
+        <div class="panel">
+            <h2>🧩 Plugins (Drag & Drop)</h2>
+            <div id="plugin-list">
+                <div class="plugin-card" draggable="true" data-id="gdd_architect">📝 GDD Architect</div>
+                <div class="plugin-card" draggable="true" data-id="vision_bridge">👁️ Vision Bridge</div>
+                <div class="plugin-card" draggable="true" data-id="internet_agent">🌐 Internet Agent</div>
+                <div class="plugin-card" draggable="true" data-id="auto_hotkey">🎮 AutoHotkey</div>
+                <div class="plugin-card" draggable="true" data-id="social_publisher">📢 Social Publisher</div>
+                <div class="plugin-card" draggable="true" data-id="self_learning">🧠 Self Learning</div>
+            </div>
+            
+            <div class="metrics">
+                <div class="metric-box">
+                    <div class="metric-val" id="vram-val">0%</div>
+                    <div>VRAM Used</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-val" id="model-val">None</div>
+                    <div>Active Model</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Рабочая область -->
+        <div class="panel">
+            <h2>⚡ Active Workspace</h2>
+            <div id="workspace" class="drop-zone">
+                <p>Drag plugins here to activate</p>
+            </div>
+            <div style="margin-top: 20px;">
+                <h3>📊 Live Task Graph</h3>
+                <canvas id="graphCanvas" width="100%" height="200" style="background:#181825; border-radius:8px;"></canvas>
+            </div>
+        </div>
+
+        <!-- Логи -->
+        <div class="panel">
+            <h2>📜 System Logs</h2>
+            <div id="log-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // Drag and Drop Logic
+        const draggables = document.querySelectorAll('.plugin-card');
+        const dropZone = document.getElementById('workspace');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const draggable = document.querySelector('.dragging');
+            if (draggable) {
+                const clone = draggable.cloneNode(true);
+                clone.classList.remove('dragging');
+                clone.style.cursor = 'default';
+                clone.addEventListener('click', () => {
+                    if(confirm(`Deactivate ${clone.innerText}?`)) {
+                        clone.remove();
+                        updateStatus();
+                    }
+                });
+                dropZone.appendChild(clone);
+                
+                // Add log entry
+                addLog(`Plugin activated: ${clone.innerText}`, 'info');
+                updateStatus();
+            }
+        });
+
+        // Logging
+        function addLog(msg, type='info') {
+            const container = document.getElementById('log-container');
+            const div = document.createElement('div');
+            div.className = `log-entry ${type}`;
+            div.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            container.prepend(div);
+            if (container.children.length > 50) container.lastChild.remove();
+        }
+
+        // Status Polling
+        async function updateStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                
+                document.getElementById('connection-status').innerText = data.lmstudio_connected ? "✅ LM Studio Connected" : "⚠️ LM Studio Offline";
+                document.getElementById('connection-status').style.background = data.lmstudio_connected ? "#a6e3a1" : "#fab387";
+                
+                document.getElementById('vram-val').innerText = data.vram_usage || "N/A";
+                document.getElementById('model-val').innerText = data.active_model || "None";
+                
+                if (!data.lmstudio_connected) {
+                    addLog("Warning: LM Studio not connected!", "warn");
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        setInterval(updateStatus, 2000);
+        updateStatus();
+        
+        // Fake Graph Animation
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        let offset = 0;
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#89b4fa';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for(let i=0; i<canvas.width; i+=10) {
+                ctx.lineTo(i, 50 + Math.sin((i+offset)/20)*20);
+            }
+            ctx.stroke();
+            offset += 2;
+            requestAnimationFrame(drawGraph);
+        }
+        drawGraph();
+    </script>
+</body>
+</html>
+        
