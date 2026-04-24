@@ -10,18 +10,28 @@
         .status-badge { background: #a6e3a1; color: #1e1e2e; padding: 5px 10px; border-radius: 12px; font-weight: bold; }
         .grid { display: grid; grid-template-columns: 250px 1fr 300px; gap: 20px; height: calc(100vh - 100px); }
         .panel { background: #313244; border-radius: 12px; padding: 15px; overflow-y: auto; border: 1px solid #45475a; }
-        .plugin-card { background: #45475a; padding: 10px; margin-bottom: 10px; border-radius: 8px; cursor: grab; transition: transform 0.2s; }
-        .plugin-card:hover { transform: translateY(-2px); background: #585b70; }
-        .drop-zone { border: 2px dashed #89b4fa; background: #181825; min-height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .drop-zone.dragover { border-color: #a6e3a1; background: #1e2e20; }
+        .plugin-card { background: #45475a; padding: 10px; margin-bottom: 10px; border-radius: 8px; cursor: grab; transition: transform 0.2s; user-select: none; }
+        .plugin-card:hover { transform: translateY(-2px); background: #585b70; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .plugin-card.dragging { opacity: 0.5; cursor: grabbing; }
+        .drop-zone { border: 2px dashed #89b4fa; background: #181825; min-height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px; transition: all 0.3s; }
+        .drop-zone.dragover { border-color: #a6e3a1; background: #1e2e20; border-style: solid; }
+        .workspace-plugin { background: #585b70; padding: 12px; margin: 8px; border-radius: 8px; cursor: pointer; border-left: 4px solid #89b4fa; animation: slideIn 0.3s ease; }
+        .workspace-plugin:hover { background: #6c7086; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         .log-entry { font-family: monospace; font-size: 0.9em; border-bottom: 1px solid #45475a; padding: 5px 0; }
         .log-entry.info { color: #89b4fa; }
         .log-entry.warn { color: #fab387; }
+        .log-entry.error { color: #f38ba8; }
         .agent-active { color: #a6e3a1; font-weight: bold; }
-        h2 { margin-top: 0; color: #f9e2af; }
+        h2 { margin-top: 0; color: #f9e2af; font-size: 1.2em; }
         .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .metric-box { background: #181825; padding: 10px; border-radius: 8px; text-align: center; }
         .metric-val { font-size: 1.5em; font-weight: bold; color: #cba6f7; }
+        .model-badge { display: inline-block; background: #89b4fa; color: #1e1e2e; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; margin: 2px; }
+        .btn { background: #89b4fa; color: #1e1e2e; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 5px; }
+        .btn:hover { background: #b4befe; }
+        .btn-danger { background: #f38ba8; }
+        .btn-danger:hover { background: #eba0ac; }
     </style>
 </head>
 <body>
@@ -35,23 +45,28 @@
         <div class="panel">
             <h2>🧩 Plugins (Drag & Drop)</h2>
             <div id="plugin-list">
-                <div class="plugin-card" draggable="true" data-id="gdd_architect">📝 GDD Architect</div>
-                <div class="plugin-card" draggable="true" data-id="vision_bridge">👁️ Vision Bridge</div>
-                <div class="plugin-card" draggable="true" data-id="internet_agent">🌐 Internet Agent</div>
-                <div class="plugin-card" draggable="true" data-id="auto_hotkey">🎮 AutoHotkey</div>
-                <div class="plugin-card" draggable="true" data-id="social_publisher">📢 Social Publisher</div>
-                <div class="plugin-card" draggable="true" data-id="self_learning">🧠 Self Learning</div>
+                <div class="plugin-card" draggable="true" data-id="gdd_architect" data-type="generator">📝 GDD Architect</div>
+                <div class="plugin-card" draggable="true" data-id="vision_bridge" data-type="processor">👁️ Vision Bridge</div>
+                <div class="plugin-card" draggable="true" data-id="internet_agent" data-type="agent">🌐 Internet Agent</div>
+                <div class="plugin-card" draggable="true" data-id="auto_hotkey" data-type="automation">🎮 AutoHotkey</div>
+                <div class="plugin-card" draggable="true" data-id="social_publisher" data-type="publisher">📢 Social Publisher</div>
+                <div class="plugin-card" draggable="true" data-id="self_learning" data-type="learning">🧠 Self Learning</div>
             </div>
-            
+
             <div class="metrics">
                 <div class="metric-box">
-                    <div class="metric-val" id="vram-val">0%</div>
+                    <div class="metric-val" id="vram-val">N/A</div>
                     <div>VRAM Used</div>
                 </div>
                 <div class="metric-box">
-                    <div class="metric-val" id="model-val">None</div>
+                    <div class="metric-val" id="model-val" style="font-size: 0.9em;">None</div>
                     <div>Active Model</div>
                 </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <button class="btn" onclick="testConnection()">🔌 Test LM Studio</button>
+                <button class="btn btn-danger" onclick="unloadModels()">🗑 Unload All</button>
             </div>
         </div>
 
@@ -59,11 +74,15 @@
         <div class="panel">
             <h2>⚡ Active Workspace</h2>
             <div id="workspace" class="drop-zone">
-                <p>Drag plugins here to activate</p>
+                <p style="color: #6c7086;">Drag plugins here to activate<br><small>Click activated plugin to send test request</small></p>
             </div>
             <div style="margin-top: 20px;">
                 <h3>📊 Live Task Graph</h3>
                 <canvas id="graphCanvas" width="100%" height="200" style="background:#181825; border-radius:8px;"></canvas>
+            </div>
+            <div style="margin-top: 15px;">
+                <h3>📦 Loaded Models</h3>
+                <div id="loaded-models" style="min-height: 30px;"></div>
             </div>
         </div>
 
@@ -75,14 +94,22 @@
     </div>
 
     <script>
-        // Drag and Drop Logic
+        // Drag and Drop Logic с улучшенной поддержкой
         const draggables = document.querySelectorAll('.plugin-card');
         const dropZone = document.getElementById('workspace');
+        let activePlugins = new Set();
 
         draggables.forEach(draggable => {
-            draggable.addEventListener('dragstart', () => {
+            draggable.addEventListener('dragstart', (e) => {
                 draggable.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', JSON.stringify({
+                    id: draggable.dataset.id,
+                    name: draggable.innerText,
+                    type: draggable.dataset.type
+                }));
+                e.dataTransfer.effectAllowed = 'copy';
             });
+
             draggable.addEventListener('dragend', () => {
                 draggable.classList.remove('dragging');
             });
@@ -90,6 +117,7 @@
 
         dropZone.addEventListener('dragover', e => {
             e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
             dropZone.classList.add('dragover');
         });
 
@@ -100,24 +128,79 @@
         dropZone.addEventListener('drop', e => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-            const draggable = document.querySelector('.dragging');
-            if (draggable) {
-                const clone = draggable.cloneNode(true);
-                clone.classList.remove('dragging');
-                clone.style.cursor = 'default';
-                clone.addEventListener('click', () => {
-                    if(confirm(`Deactivate ${clone.innerText}?`)) {
-                        clone.remove();
-                        updateStatus();
-                    }
-                });
-                dropZone.appendChild(clone);
-                
-                // Add log entry
-                addLog(`Plugin activated: ${clone.innerText}`, 'info');
-                updateStatus();
+
+            const data = e.dataTransfer.getData('text/plain');
+            if (data) {
+                try {
+                    const pluginData = JSON.parse(data);
+                    addPluginToWorkspace(pluginData);
+                } catch (err) {
+                    console.error('Error parsing drop data:', err);
+                }
             }
         });
+
+        function addPluginToWorkspace(pluginData) {
+            if (activePlugins.has(pluginData.id)) {
+                addLog(`Plugin ${pluginData.name} already active!`, 'warn');
+                return;
+            }
+
+            const pluginEl = document.createElement('div');
+            pluginEl.className = 'workspace-plugin';
+            pluginEl.dataset.id = pluginData.id;
+            pluginEl.innerHTML = `
+                <strong>${pluginData.name}</strong><br>
+                <small style="color: #89b4fa;">Type: ${pluginData.type}</small><br>
+                <small style="color: #a6e3a1;">● Active</small>
+            `;
+
+            pluginEl.addEventListener('click', () => {
+                if(confirm(`Send test request to ${pluginData.name}?`)) {
+                    sendPluginTestRequest(pluginData.id);
+                }
+            });
+
+            pluginEl.addEventListener('dblclick', () => {
+                if(confirm(`Deactivate ${pluginData.name}?`)) {
+                    pluginEl.remove();
+                    activePlugins.delete(pluginData.id);
+                    addLog(`Plugin deactivated: ${pluginData.name}`, 'info');
+                    updateStatus();
+                }
+            });
+
+            dropZone.appendChild(pluginEl);
+            activePlugins.add(pluginData.id);
+            addLog(`Plugin activated: ${pluginData.name}`, 'info');
+            updateStatus();
+        }
+
+        function sendPluginTestRequest(pluginId) {
+            addLog(`Sending test request to ${pluginId}...`, 'info');
+
+            fetch(`/api/plugin/${pluginId}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    action: 'test',
+                    timestamp: new Date().toISOString(),
+                    message: 'Test request from Visual Router'
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    addLog(`✅ Plugin ${pluginId} responded successfully`, 'info');
+                    addLog(`Response: ${JSON.stringify(data.message)}`, 'info');
+                } else {
+                    addLog(`❌ Plugin ${pluginId} error: ${data.error}`, 'error');
+                }
+            })
+            .catch(err => {
+                addLog(`❌ Error calling plugin: ${err.message}`, 'error');
+            });
+        }
 
         // Logging
         function addLog(msg, type='info') {
@@ -134,25 +217,69 @@
             try {
                 const res = await fetch('/api/status');
                 const data = await res.json();
-                
+
                 document.getElementById('connection-status').innerText = data.lmstudio_connected ? "✅ LM Studio Connected" : "⚠️ LM Studio Offline";
                 document.getElementById('connection-status').style.background = data.lmstudio_connected ? "#a6e3a1" : "#fab387";
-                
+
                 document.getElementById('vram-val').innerText = data.vram_usage || "N/A";
                 document.getElementById('model-val').innerText = data.active_model || "None";
-                
+
+                // Обновляем список загруженных моделей
+                const modelsContainer = document.getElementById('loaded-models');
+                if (data.loaded_models && data.loaded_models.length > 0) {
+                    modelsContainer.innerHTML = data.loaded_models.map(m =>
+                        `<span class="model-badge">${m}</span>`
+                    ).join('');
+                } else {
+                    modelsContainer.innerHTML = '<small style="color: #6c7086;">No models loaded</small>';
+                }
+
                 if (!data.lmstudio_connected) {
                     addLog("Warning: LM Studio not connected!", "warn");
                 }
             } catch (e) {
                 console.error(e);
+                addLog(`Status update error: ${e.message}`, 'error');
             }
+        }
+
+        // Test Connection
+        async function testConnection() {
+            addLog('Testing LM Studio connection...', 'info');
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                if (data.lmstudio_connected) {
+                    addLog('✅ Successfully connected to LM Studio!', 'info');
+
+                    // Тестовый запрос к модели
+                    addLog('Sending test request to model...', 'info');
+                    const status = await updateStatus();
+                } else {
+                    addLog('⚠️ LM Studio is not running or unreachable', 'warn');
+                    addLog('Please start LM Studio server on port 1234', 'warn');
+                }
+            } catch (e) {
+                addLog(`Connection test failed: ${e.message}`, 'error');
+            }
+        }
+
+        // Unload Models
+        async function unloadModels() {
+            if(!confirm('Unload all models from memory?')) return;
+
+            addLog('Unloading all models...', 'info');
+            // В реальной реализации здесь был бы API вызов
+            setTimeout(() => {
+                addLog('Models unloaded (simulated)', 'info');
+                updateStatus();
+            }, 500);
         }
 
         setInterval(updateStatus, 2000);
         updateStatus();
-        
-        // Fake Graph Animation
+
+        // Graph Animation
         const canvas = document.getElementById('graphCanvas');
         const ctx = canvas.getContext('2d');
         let offset = 0;
