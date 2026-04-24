@@ -1,0 +1,579 @@
+./benchmarks/run_benchmarks.py:4:1: E302 expected 2 blank lines, found 1
+./benchmarks/run_benchmarks.py:8:41: E261 at least two spaces before inline comment
+./benchmarks/run_benchmarks.py:10:1: W293 blank line contains whitespace
+./benchmarks/run_benchmarks.py:15:1: E305 expected 2 blank lines after class or function definition, found 1
+./benchmarks/run_benchmarks.py:18:25: W292 no newline at end of file
+./core/main.py:4:1: F401 'os' imported but unused
+./core/main.py:7:1: F401 'datetime.datetime' imported but unused
+./core/main.py:18:80: E501 line too long (82 > 79 characters)
+./core/main.py:25:33: E261 at least two spaces before inline comment
+./core/main.py:42:1: E302 expected 2 blank lines, found 1
+./core/main.py:82:9: E722 do not use bare 'except'
+./core/main.py:84:80: E501 line too long (93 > 79 characters)
+./core/main.py:109:1: W293 blank line contains whitespace
+./core/main.py:110:15: W291 trailing whitespace
+./core/main.py:111:68: W291 trailing whitespace
+./core/main.py:112:43: W291 trailing whitespace
+./core/main.py:113:40: W291 trailing whitespace
+./core/main.py:114:23: W291 trailing whitespace
+./core/main.py:115:27: W291 trailing whitespace
+./core/main.py:117:1: W293 blank line contains whitespace
+./core/main.py:118:18: W291 trailing whitespace
+./core/main.py:119:27: W291 trailing whitespace
+./core/main.py:120:44: W291 trailing whitespace
+./core/main.py:121:33: W291 trailing whitespace
+./core/main.py:122:33: W291 trailing whitespace
+./core/main.py:126:1: W293 blank line contains whitespace
+./core/main.py:127:24: W291 trailing whitespace
+./core/main.py:128:45: W291 trailing whitespace
+./core/main.py:129:38: W291 trailing whitespace
+./core/main.py:130:31: W291 trailing whitespace
+./core/main.py:131:33: W291 trailing whitespace
+./core/main.py:132:31: W291 trailing whitespace
+./core/main.py:136:1: W293 blank line contains whitespace
+./core/main.py:137:16: W291 trailing whitespace
+./core/main.py:138:27: W291 trailing whitespace
+./core/main.py:139:52: W291 trailing whitespace
+./core/main.py:140:23: W291 trailing whitespace
+./core/main.py:141:41: W291 trailing whitespace
+./core/main.py:143:1: W293 blank line contains whitespace
+./core/main.py:144:17: W291 trailing whitespace
+./core/main.py:145:45: W291 trailing whitespace
+./core/main.py:146:33: W291 trailing whitespace
+./core/main.py:147:27: W291 trailing whitespace
+./core/main.py:148:30: W291 trailing whitespace
+./core/main.py:152:1: W293 blank line contains whitespace
+./core/main.py:154:23: W291 trailing whitespace
+./core/main.py:155:80: E501 line too long (85 > 79 characters)
+./core/main.py:156:27: W291 trailing whitespace
+./core/main.py:157:33: W291 trailing whitespace
+./core/main.py:158:32: W291 trailing whitespace
+./core/main.py:159:26: W291 trailing whitespace
+./core/main.py:166:1: W293 blank line contains whitespace
+./core/main.py:174:80: E501 line too long (111 > 79 characters)
+./core/main.py:178:1: W293 blank line contains whitespace
+./core/main.py:182:1: W293 blank line contains whitespace
+./core/main.py:183:29: W291 trailing whitespace
+./core/main.py:184:53: W291 trailing whitespace
+./core/main.py:189:1: W293 blank line contains whitespace
+./core/main.py:190:32: W291 trailing whitespace
+./core/main.py:191:26: W291 trailing whitespace
+./core/main.py:192:30: W291 trailing whitespace
+./core/main.py:195:1: W293 blank line contains whitespace
+./core/main.py:201:1: W293 blank line contains whitespace
+./core/main.py:206:1: W293 blank line contains whitespace
+./core/main.py:212:1: W293 blank line contains whitespace
+./core/main.py:214:21: W291 trailing whitespace
+./core/main.py:215:51: W291 trailing whitespace
+./core/main.py:217:31: W291 trailing whitespace
+./core/main.py:218:33: W291 trailing whitespace
+./core/main.py:219:27: W291 trailing whitespace
+./core/main.py:220:33: W291 trailing whitespace
+./core/main.py:221:37: W291 trailing whitespace
+./core/main.py:222:36: W291 trailing whitespace
+./core/main.py:223:27: W291 trailing whitespace
+./core/main.py:227:1: W293 blank line contains whitespace
+./core/main.py:240:1: W293 blank line contains whitespace
+./core/main.py:241:30: W291 trailing whitespace
+./core/main.py:242:47: W291 trailing whitespace
+./core/main.py:247:1: W293 blank line contains whitespace
+./core/main.py:252:1: W293 blank line contains whitespace
+./core/main.py:257:1: W293 blank line contains whitespace
+./core/main.py:259:28: W291 trailing whitespace
+./core/main.py:260:80: E501 line too long (85 > 79 characters)
+./core/main.py:261:27: W291 trailing whitespace
+./core/main.py:262:26: W291 trailing whitespace
+./core/main.py:263:33: W291 trailing whitespace
+./core/main.py:264:29: W291 trailing whitespace
+./core/main.py:271:1: W293 blank line contains whitespace
+./core/main.py:272:34: W291 trailing whitespace
+./core/main.py:277:1: W293 blank line contains whitespace
+./core/main.py:278:40: W291 trailing whitespace
+./core/main.py:279:32: W291 trailing whitespace
+./core/main.py:280:22: W291 trailing whitespace
+./core/main.py:281:24: W291 trailing whitespace
+./core/main.py:282:43: W291 trailing whitespace
+./core/main.py:283:38: W291 trailing whitespace
+./core/main.py:284:26: W291 trailing whitespace
+./core/main.py:285:25: W291 trailing whitespace
+./core/main.py:286:26: W291 trailing whitespace
+./core/main.py:287:32: W291 trailing whitespace
+./core/main.py:288:29: W291 trailing whitespace
+./core/main.py:289:31: W291 trailing whitespace
+./core/main.py:290:29: W291 trailing whitespace
+./core/main.py:291:28: W291 trailing whitespace
+./core/main.py:292:27: W291 trailing whitespace
+./core/main.py:293:33: W291 trailing whitespace
+./core/main.py:294:37: W291 trailing whitespace
+./core/main.py:295:24: W291 trailing whitespace
+./core/main.py:299:1: W293 blank line contains whitespace
+./core/main.py:300:46: W291 trailing whitespace
+./core/main.py:301:24: W291 trailing whitespace
+./core/main.py:304:1: W293 blank line contains whitespace
+./core/main.py:305:46: W291 trailing whitespace
+./core/main.py:306:33: W291 trailing whitespace
+./core/main.py:309:1: W293 blank line contains whitespace
+./core/main.py:310:29: W291 trailing whitespace
+./core/main.py:311:19: W291 trailing whitespace
+./core/main.py:312:28: W291 trailing whitespace
+./core/main.py:313:57: W291 trailing whitespace
+./core/main.py:314:14: W291 trailing whitespace
+./core/main.py:315:17: W291 trailing whitespace
+./core/main.py:316:28: W291 trailing whitespace
+./core/main.py:317:51: W291 trailing whitespace
+./core/main.py:318:14: W291 trailing whitespace
+./core/main.py:320:1: W293 blank line contains whitespace
+./core/main.py:328:1: W293 blank line contains whitespace
+./core/main.py:339:1: W293 blank line contains whitespace
+./core/main.py:343:1: W293 blank line contains whitespace
+./core/main.py:349:1: W293 blank line contains whitespace
+./core/main.py:350:21: W291 trailing whitespace
+./core/main.py:351:63: W291 trailing whitespace
+./core/main.py:352:31: W291 trailing whitespace
+./core/main.py:353:57: W291 trailing whitespace
+./core/main.py:354:31: W291 trailing whitespace
+./core/main.py:358:1: W293 blank line contains whitespace
+./core/main.py:362:1: W293 blank line contains whitespace
+./core/main.py:368:1: W293 blank line contains whitespace
+./core/main.py:372:1: W293 blank line contains whitespace
+./core/main.py:374:80: E501 line too long (95 > 79 characters)
+./core/main.py:375:80: E501 line too long (93 > 79 characters)
+./core/main.py:376:80: E501 line too long (97 > 79 characters)
+./core/main.py:377:1: W293 blank line contains whitespace
+./core/main.py:379:1: W293 blank line contains whitespace
+./core/main.py:380:13: W291 trailing whitespace
+./core/main.py:381:27: W291 trailing whitespace
+./core/main.py:382:41: W291 trailing whitespace
+./core/main.py:388:1: W293 blank line contains whitespace
+./core/main.py:389:19: W291 trailing whitespace
+./core/main.py:390:27: W291 trailing whitespace
+./core/main.py:391:44: W291 trailing whitespace
+./core/main.py:392:23: W291 trailing whitespace
+./core/main.py:393:30: W291 trailing whitespace
+./core/main.py:395:1: W293 blank line contains whitespace
+./core/main.py:396:22: W291 trailing whitespace
+./core/main.py:398:27: W291 trailing whitespace
+./core/main.py:399:33: W291 trailing whitespace
+./core/main.py:404:1: W293 blank line contains whitespace
+./core/main.py:409:1: W293 blank line contains whitespace
+./core/main.py:410:22: W291 trailing whitespace
+./core/main.py:411:30: W291 trailing whitespace
+./core/main.py:412:31: W291 trailing whitespace
+./core/main.py:416:1: W293 blank line contains whitespace
+./core/main.py:422:1: W293 blank line contains whitespace
+./core/main.py:423:23: W291 trailing whitespace
+./core/main.py:424:35: W291 trailing whitespace
+./core/main.py:425:44: W291 trailing whitespace
+./core/main.py:426:38: W291 trailing whitespace
+./core/main.py:427:31: W291 trailing whitespace
+./core/main.py:428:32: W291 trailing whitespace
+./core/main.py:429:31: W291 trailing whitespace
+./core/main.py:434:1: W293 blank line contains whitespace
+./core/main.py:439:1: W293 blank line contains whitespace
+./core/main.py:440:15: W291 trailing whitespace
+./core/main.py:441:80: E501 line too long (85 > 79 characters)
+./core/main.py:442:38: W291 trailing whitespace
+./core/main.py:443:26: W291 trailing whitespace
+./core/main.py:444:32: W291 trailing whitespace
+./core/main.py:445:32: W291 trailing whitespace
+./core/main.py:446:29: W291 trailing whitespace
+./core/main.py:447:31: W291 trailing whitespace
+./core/main.py:452:1: W293 blank line contains whitespace
+./core/main.py:453:21: W291 trailing whitespace
+./core/main.py:457:1: W293 blank line contains whitespace
+./core/main.py:461:1: W293 blank line contains whitespace
+./core/main.py:462:22: W291 trailing whitespace
+./core/main.py:463:80: E501 line too long (84 > 79 characters)
+./core/main.py:465:1: W293 blank line contains whitespace
+./core/main.py:466:28: W291 trailing whitespace
+./core/main.py:469:1: W293 blank line contains whitespace
+./core/main.py:478:1: W293 blank line contains whitespace
+./core/main.py:487:1: W293 blank line contains whitespace
+./core/main.py:494:1: W293 blank line contains whitespace
+./core/main.py:500:1: W293 blank line contains whitespace
+./core/main.py:508:1: W293 blank line contains whitespace
+./core/main.py:512:1: W293 blank line contains whitespace
+./core/main.py:518:1: W293 blank line contains whitespace
+./core/main.py:522:1: W293 blank line contains whitespace
+./core/main.py:532:1: W293 blank line contains whitespace
+./core/main.py:539:1: W293 blank line contains whitespace
+./core/main.py:546:1: W293 blank line contains whitespace
+./core/main.py:555:80: E501 line too long (126 > 79 characters)
+./core/main.py:564:80: E501 line too long (104 > 79 characters)
+./core/main.py:567:80: E501 line too long (81 > 79 characters)
+./core/main.py:569:80: E501 line too long (104 > 79 characters)
+./core/main.py:574:80: E501 line too long (101 > 79 characters)
+./core/main.py:579:80: E501 line too long (103 > 79 characters)
+./core/main.py:584:80: E501 line too long (107 > 79 characters)
+./core/main.py:589:80: E501 line too long (103 > 79 characters)
+./core/main.py:602:80: E501 line too long (95 > 79 characters)
+./core/main.py:608:80: E501 line too long (88 > 79 characters)
+./core/main.py:609:80: E501 line too long (93 > 79 characters)
+./core/main.py:611:1: W293 blank line contains whitespace
+./core/main.py:616:80: E501 line too long (120 > 79 characters)
+./core/main.py:617:80: E501 line too long (120 > 79 characters)
+./core/main.py:631:80: E501 line too long (108 > 79 characters)
+./core/main.py:634:1: W293 blank line contains whitespace
+./core/main.py:639:80: E501 line too long (93 > 79 characters)
+./core/main.py:640:80: E501 line too long (96 > 79 characters)
+./core/main.py:643:80: E501 line too long (123 > 79 characters)
+./core/main.py:645:1: W293 blank line contains whitespace
+./core/main.py:648:80: E501 line too long (128 > 79 characters)
+./core/main.py:664:1: W293 blank line contains whitespace
+./core/main.py:666:80: E501 line too long (85 > 79 characters)
+./core/main.py:666:86: W291 trailing whitespace
+./core/main.py:667:80: E501 line too long (93 > 79 characters)
+./core/main.py:669:1: W293 blank line contains whitespace
+./core/main.py:672:1: W293 blank line contains whitespace
+./core/main.py:673:80: E501 line too long (97 > 79 characters)
+./core/main.py:674:1: W293 blank line contains whitespace
+./core/main.py:677:1: W293 blank line contains whitespace
+./core/main.py:685:1: W293 blank line contains whitespace
+./core/main.py:690:1: W293 blank line contains whitespace
+./core/main.py:694:1: W293 blank line contains whitespace
+./core/main.py:700:1: W293 blank line contains whitespace
+./core/main.py:706:1: W293 blank line contains whitespace
+./core/main.py:708:80: E501 line too long (108 > 79 characters)
+./core/main.py:711:1: W293 blank line contains whitespace
+./core/main.py:717:1: W293 blank line contains whitespace
+./core/main.py:721:1: W293 blank line contains whitespace
+./core/main.py:726:1: W293 blank line contains whitespace
+./core/main.py:731:1: W293 blank line contains whitespace
+./core/main.py:737:80: E501 line too long (87 > 79 characters)
+./core/main.py:738:1: W293 blank line contains whitespace
+./core/main.py:748:80: E501 line too long (81 > 79 characters)
+./core/main.py:750:1: W293 blank line contains whitespace
+./core/main.py:756:1: W293 blank line contains whitespace
+./core/main.py:762:1: W293 blank line contains whitespace
+./core/main.py:768:1: W293 blank line contains whitespace
+./core/main.py:775:1: W293 blank line contains whitespace
+./core/main.py:779:1: W293 blank line contains whitespace
+./core/main.py:791:1: W293 blank line contains whitespace
+./core/main.py:794:80: E501 line too long (81 > 79 characters)
+./core/main.py:796:80: E501 line too long (111 > 79 characters)
+./core/main.py:804:1: W293 blank line contains whitespace
+./core/main.py:810:80: E501 line too long (80 > 79 characters)
+./core/main.py:811:80: E501 line too long (81 > 79 characters)
+./core/main.py:812:80: E501 line too long (102 > 79 characters)
+./core/main.py:813:80: E501 line too long (82 > 79 characters)
+./core/main.py:815:1: W293 blank line contains whitespace
+./core/main.py:819:80: E501 line too long (90 > 79 characters)
+./core/main.py:821:1: W293 blank line contains whitespace
+./core/main.py:828:1: W293 blank line contains whitespace
+./core/main.py:838:1: W293 blank line contains whitespace
+./core/main.py:845:1: W293 blank line contains whitespace
+./core/main.py:851:1: W293 blank line contains whitespace
+./core/main.py:858:1: W293 blank line contains whitespace
+./core/main.py:861:1: W293 blank line contains whitespace
+./core/main.py:874:80: E501 line too long (87 > 79 characters)
+./core/main.py:876:80: E501 line too long (104 > 79 characters)
+./core/main.py:879:80: E501 line too long (83 > 79 characters)
+./core/main.py:886:1: W293 blank line contains whitespace
+./core/main.py:892:1: W293 blank line contains whitespace
+./core/main.py:898:1: W293 blank line contains whitespace
+./core/main.py:902:1: W293 blank line contains whitespace
+./core/main.py:905:80: E501 line too long (82 > 79 characters)
+./core/main.py:908:80: E501 line too long (98 > 79 characters)
+./core/main.py:909:80: E501 line too long (116 > 79 characters)
+./core/main.py:911:1: W293 blank line contains whitespace
+./core/main.py:914:1: W293 blank line contains whitespace
+./core/main.py:918:1: W293 blank line contains whitespace
+./core/main.py:920:80: E501 line too long (87 > 79 characters)
+./core/main.py:922:1: W293 blank line contains whitespace
+./core/main.py:929:1: W293 blank line contains whitespace
+./core/main.py:931:1: W293 blank line contains whitespace
+./core/main.py:934:1: W293 blank line contains whitespace
+./core/main.py:940:1: W293 blank line contains whitespace
+./core/main.py:947:80: E501 line too long (82 > 79 characters)
+./core/main.py:951:1: W293 blank line contains whitespace
+./core/main.py:956:1: W293 blank line contains whitespace
+./core/main.py:965:1: W293 blank line contains whitespace
+./core/main.py:966:80: E501 line too long (89 > 79 characters)
+./core/main.py:967:1: W293 blank line contains whitespace
+./core/main.py:975:1: W293 blank line contains whitespace
+./core/main.py:977:80: E501 line too long (81 > 79 characters)
+./core/main.py:983:80: E501 line too long (119 > 79 characters)
+./core/main.py:985:1: W293 blank line contains whitespace
+./core/main.py:995:1: W293 blank line contains whitespace
+./core/main.py:1005:1: W293 blank line contains whitespace
+./core/main.py:1007:80: E501 line too long (80 > 79 characters)
+./core/main.py:1008:1: W293 blank line contains whitespace
+./core/main.py:1011:80: E501 line too long (89 > 79 characters)
+./core/main.py:1013:1: W293 blank line contains whitespace
+./core/main.py:1016:80: E501 line too long (100 > 79 characters)
+./core/main.py:1021:80: E501 line too long (91 > 79 characters)
+./core/main.py:1027:1: W293 blank line contains whitespace
+./core/main.py:1029:80: E501 line too long (95 > 79 characters)
+./core/main.py:1031:80: E501 line too long (82 > 79 characters)
+./core/main.py:1034:80: E501 line too long (81 > 79 characters)
+./core/main.py:1035:80: E501 line too long (83 > 79 characters)
+./core/main.py:1041:1: W293 blank line contains whitespace
+./core/main.py:1047:1: W293 blank line contains whitespace
+./core/main.py:1050:80: E501 line too long (82 > 79 characters)
+./core/main.py:1052:1: W293 blank line contains whitespace
+./core/main.py:1063:1: W293 blank line contains whitespace
+./core/main.py:1072:1: W293 blank line contains whitespace
+./core/main.py:1075:1: W293 blank line contains whitespace
+./core/main.py:1084:1: W293 blank line contains whitespace
+./core/main.py:1087:1: W293 blank line contains whitespace
+./core/main.py:1102:1: W293 blank line contains whitespace
+./core/main.py:1105:1: W293 blank line contains whitespace
+./core/main.py:1122:1: W293 blank line contains whitespace
+./core/main.py:1128:80: E501 line too long (80 > 79 characters)
+./core/main.py:1128:81: W291 trailing whitespace
+./core/main.py:1137:1: W293 blank line contains whitespace
+./core/main.py:1142:1: W293 blank line contains whitespace
+./core/main.py:1146:1: W293 blank line contains whitespace
+./core/main.py:1148:80: E501 line too long (97 > 79 characters)
+./core/main.py:1155:1: W293 blank line contains whitespace
+./core/main.py:1162:1: W293 blank line contains whitespace
+./core/main.py:1167:1: W293 blank line contains whitespace
+./core/main.py:1173:1: W293 blank line contains whitespace
+./core/main.py:1176:1: W293 blank line contains whitespace
+./core/main.py:1177:80: E501 line too long (83 > 79 characters)
+./core/main.py:1181:1: W293 blank line contains whitespace
+./core/main.py:1214:80: E501 line too long (88 > 79 characters)
+./core/main.py:1217:80: E501 line too long (81 > 79 characters)
+./core/main.py:1218:80: E501 line too long (88 > 79 characters)
+./core/main.py:1219:80: E501 line too long (83 > 79 characters)
+./core/main.py:1226:80: E501 line too long (89 > 79 characters)
+./core/main.py:1260:80: E501 line too long (93 > 79 characters)
+./core/main.py:1261:1: W293 blank line contains whitespace
+./core/main.py:1275:80: E501 line too long (98 > 79 characters)
+./core/main.py:1285:80: E501 line too long (97 > 79 characters)
+./core/main.py:1292:80: E501 line too long (83 > 79 characters)
+./core/main.py:1313:26: E261 at least two spaces before inline comment
+./core/main.py:1332:1: E302 expected 2 blank lines, found 1
+./core/main.py:1341:80: E501 line too long (83 > 79 characters)
+./core/main.py:1352:1: E305 expected 2 blank lines after class or function definition, found 1
+./core/main_backup.py:4:1: F401 'os' imported but unused
+./core/main_backup.py:7:1: F401 'datetime.datetime' imported but unused
+./core/main_backup.py:18:80: E501 line too long (82 > 79 characters)
+./core/main_backup.py:25:33: E261 at least two spaces before inline comment
+./core/main_backup.py:42:1: E302 expected 2 blank lines, found 1
+./core/main_backup.py:82:9: E722 do not use bare 'except'
+./core/main_backup.py:84:80: E501 line too long (93 > 79 characters)
+./core/main_backup.py:96:80: E501 line too long (116 > 79 characters)
+./core/main_backup.py:97:80: E501 line too long (108 > 79 characters)
+./core/main_backup.py:98:80: E501 line too long (121 > 79 characters)
+./core/main_backup.py:99:80: E501 line too long (112 > 79 characters)
+./core/main_backup.py:100:80: E501 line too long (120 > 79 characters)
+./core/main_backup.py:101:80: E501 line too long (162 > 79 characters)
+./core/main_backup.py:102:80: E501 line too long (119 > 79 characters)
+./core/main_backup.py:104:80: E501 line too long (232 > 79 characters)
+./core/main_backup.py:105:80: E501 line too long (96 > 79 characters)
+./core/main_backup.py:106:80: E501 line too long (177 > 79 characters)
+./core/main_backup.py:108:80: E501 line too long (126 > 79 characters)
+./core/main_backup.py:109:80: E501 line too long (114 > 79 characters)
+./core/main_backup.py:115:80: E501 line too long (96 > 79 characters)
+./core/main_backup.py:116:80: E501 line too long (99 > 79 characters)
+./core/main_backup.py:118:80: E501 line too long (153 > 79 characters)
+./core/main_backup.py:119:80: E501 line too long (155 > 79 characters)
+./core/main_backup.py:127:80: E501 line too long (104 > 79 characters)
+./core/main_backup.py:136:80: E501 line too long (125 > 79 characters)
+./core/main_backup.py:137:80: E501 line too long (126 > 79 characters)
+./core/main_backup.py:138:80: E501 line too long (123 > 79 characters)
+./core/main_backup.py:139:80: E501 line too long (121 > 79 characters)
+./core/main_backup.py:140:80: E501 line too long (131 > 79 characters)
+./core/main_backup.py:141:80: E501 line too long (124 > 79 characters)
+./core/main_backup.py:150:80: E501 line too long (95 > 79 characters)
+./core/main_backup.py:156:80: E501 line too long (88 > 79 characters)
+./core/main_backup.py:157:80: E501 line too long (93 > 79 characters)
+./core/main_backup.py:165:80: E501 line too long (138 > 79 characters)
+./core/main_backup.py:169:80: E501 line too long (123 > 79 characters)
+./core/main_backup.py:242:80: E501 line too long (83 > 79 characters)
+./core/main_backup.py:282:80: E501 line too long (82 > 79 characters)
+./core/main_backup.py:283:80: E501 line too long (80 > 79 characters)
+./core/main_backup.py:285:80: E501 line too long (81 > 79 characters)
+./core/main_backup.py:309:80: E501 line too long (148 > 79 characters)
+./core/main_backup.py:310:80: E501 line too long (128 > 79 characters)
+./core/main_backup.py:312:80: E501 line too long (89 > 79 characters)
+./core/main_backup.py:313:80: E501 line too long (93 > 79 characters)
+./core/main_backup.py:316:80: E501 line too long (81 > 79 characters)
+./core/main_backup.py:322:80: E501 line too long (106 > 79 characters)
+./core/main_backup.py:347:80: E501 line too long (81 > 79 characters)
+./core/main_backup.py:348:80: E501 line too long (81 > 79 characters)
+./core/main_backup.py:416:80: E501 line too long (88 > 79 characters)
+./core/main_backup.py:419:80: E501 line too long (81 > 79 characters)
+./core/main_backup.py:420:80: E501 line too long (88 > 79 characters)
+./core/main_backup.py:421:80: E501 line too long (83 > 79 characters)
+./core/main_backup.py:445:80: E501 line too long (97 > 79 characters)
+./core/main_backup.py:452:80: E501 line too long (83 > 79 characters)
+./core/main_backup.py:473:26: E261 at least two spaces before inline comment
+./core/main_backup.py:492:1: E302 expected 2 blank lines, found 1
+./core/main_backup.py:501:80: E501 line too long (83 > 79 characters)
+./core/main_backup.py:512:1: E305 expected 2 blank lines after class or function definition, found 1
+./modules/calendar_manager.py:3:1: F401 'datetime' imported but unused
+./modules/calendar_manager.py:6:1: E302 expected 2 blank lines, found 1
+./modules/calendar_manager.py:35:42: W291 trailing whitespace
+./modules/calendar_manager.py:36:80: E501 line too long (94 > 79 characters)
+./modules/calendar_manager.py:39:80: E501 line too long (89 > 79 characters)
+./modules/calendar_manager.py:51:80: E501 line too long (84 > 79 characters)
+./modules/calendar_manager.py:56:1: E305 expected 2 blank lines after class or function definition, found 1
+./modules/calendar_manager.py:58:39: W292 no newline at end of file
+./modules/self_learning.py:6:1: E302 expected 2 blank lines, found 1
+./modules/self_learning.py:34:80: E501 line too long (85 > 79 characters)
+./modules/self_learning.py:45:80: E501 line too long (80 > 79 characters)
+./modules/self_learning.py:57:61: W291 trailing whitespace
+./modules/self_learning.py:60:1: W293 blank line contains whitespace
+./modules/self_learning.py:68:1: W293 blank line contains whitespace
+./modules/self_learning.py:72:1: E305 expected 2 blank lines after class or function definition, found 1
+./modules/self_learning.py:75:40: W292 no newline at end of file
+./monitoring/dashboard.py:2:1: F401 'json' imported but unused
+./monitoring/dashboard.py:13:80: E501 line too long (92 > 79 characters)
+./monitoring/dashboard.py:20:1: E302 expected 2 blank lines, found 1
+./monitoring/dashboard.py:27:1: E305 expected 2 blank lines after class or function definition, found 1
+./monitoring/dashboard.py:29:61: W292 no newline at end of file
+./orchestrator/model_switcher.py:5:1: F401 'typing.List' imported but unused
+./orchestrator/model_switcher.py:10:1: E302 expected 2 blank lines, found 1
+./orchestrator/model_switcher.py:17:52: E261 at least two spaces before inline comment
+./orchestrator/model_switcher.py:24:80: E501 line too long (93 > 79 characters)
+./orchestrator/model_switcher.py:29:80: E501 line too long (81 > 79 characters)
+./orchestrator/model_switcher.py:37:80: E501 line too long (83 > 79 characters)
+./orchestrator/model_switcher.py:67:80: E501 line too long (80 > 79 characters)
+./orchestrator/model_switcher.py:72:80: E501 line too long (109 > 79 characters)
+./orchestrator/model_switcher.py:75:80: E501 line too long (101 > 79 characters)
+./orchestrator/model_switcher.py:91:9: E722 do not use bare 'except'
+./orchestrator/model_switcher.py:97:80: E501 line too long (82 > 79 characters)
+./orchestrator/model_switcher.py:147:80: E501 line too long (94 > 79 characters)
+./orchestrator/model_switcher.py:157:80: E501 line too long (84 > 79 characters)
+./orchestrator/model_switcher.py:166:80: E501 line too long (82 > 79 characters)
+./orchestrator/model_switcher.py:172:80: E501 line too long (119 > 79 characters)
+./orchestrator/model_switcher.py:188:80: E501 line too long (81 > 79 characters)
+./orchestrator/model_switcher.py:192:9: E722 do not use bare 'except'
+./plugins/gdd_architect.py:3:80: E501 line too long (82 > 79 characters)
+./plugins/gdd_architect.py:6:1: F401 'asyncio' imported but unused
+./plugins/gdd_architect.py:9:1: F401 'typing.List' imported but unused
+./plugins/gdd_architect.py:15:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:20:80: E501 line too long (97 > 79 characters)
+./plugins/gdd_architect.py:23:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:24:80: E501 line too long (90 > 79 characters)
+./plugins/gdd_architect.py:27:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:31:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:47:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:50:80: E501 line too long (82 > 79 characters)
+./plugins/gdd_architect.py:55:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:58:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:60:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:61:80: E501 line too long (83 > 79 characters)
+./plugins/gdd_architect.py:67:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:75:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:76:80: E501 line too long (83 > 79 characters)
+./plugins/gdd_architect.py:79:80: E501 line too long (83 > 79 characters)
+./plugins/gdd_architect.py:89:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:90:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:95:80: E501 line too long (99 > 79 characters)
+./plugins/gdd_architect.py:102:80: E501 line too long (87 > 79 characters)
+./plugins/gdd_architect.py:103:80: E501 line too long (92 > 79 characters)
+./plugins/gdd_architect.py:111:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:112:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:115:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:116:80: E501 line too long (102 > 79 characters)
+./plugins/gdd_architect.py:119:80: E501 line too long (102 > 79 characters)
+./plugins/gdd_architect.py:120:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:121:80: E501 line too long (85 > 79 characters)
+./plugins/gdd_architect.py:125:80: E501 line too long (99 > 79 characters)
+./plugins/gdd_architect.py:126:80: E501 line too long (93 > 79 characters)
+./plugins/gdd_architect.py:127:80: E501 line too long (102 > 79 characters)
+./plugins/gdd_architect.py:130:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:131:80: E501 line too long (85 > 79 characters)
+./plugins/gdd_architect.py:135:80: E501 line too long (87 > 79 characters)
+./plugins/gdd_architect.py:136:80: E501 line too long (85 > 79 characters)
+./plugins/gdd_architect.py:146:80: E501 line too long (90 > 79 characters)
+./plugins/gdd_architect.py:147:80: E501 line too long (89 > 79 characters)
+./plugins/gdd_architect.py:148:80: E501 line too long (90 > 79 characters)
+./plugins/gdd_architect.py:149:80: E501 line too long (89 > 79 characters)
+./plugins/gdd_architect.py:152:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:153:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:162:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:174:80: E501 line too long (87 > 79 characters)
+./plugins/gdd_architect.py:184:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:185:80: E501 line too long (82 > 79 characters)
+./plugins/gdd_architect.py:189:80: E501 line too long (97 > 79 characters)
+./plugins/gdd_architect.py:190:80: E501 line too long (101 > 79 characters)
+./plugins/gdd_architect.py:191:80: E501 line too long (110 > 79 characters)
+./plugins/gdd_architect.py:194:80: E501 line too long (86 > 79 characters)
+./plugins/gdd_architect.py:195:80: E501 line too long (96 > 79 characters)
+./plugins/gdd_architect.py:197:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:198:80: E501 line too long (86 > 79 characters)
+./plugins/gdd_architect.py:202:80: E501 line too long (95 > 79 characters)
+./plugins/gdd_architect.py:215:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:216:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:220:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:222:80: E501 line too long (85 > 79 characters)
+./plugins/gdd_architect.py:232:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:233:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:245:80: E501 line too long (95 > 79 characters)
+./plugins/gdd_architect.py:249:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:250:80: E501 line too long (87 > 79 characters)
+./plugins/gdd_architect.py:261:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:262:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:287:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:288:80: E501 line too long (82 > 79 characters)
+./plugins/gdd_architect.py:295:80: E501 line too long (84 > 79 characters)
+./plugins/gdd_architect.py:305:80: E501 line too long (80 > 79 characters)
+./plugins/gdd_architect.py:310:80: E501 line too long (87 > 79 characters)
+./plugins/gdd_architect.py:315:80: E501 line too long (81 > 79 characters)
+./plugins/gdd_architect.py:318:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:324:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:329:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:334:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:340:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:346:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:351:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:358:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:361:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:368:80: E501 line too long (115 > 79 characters)
+./plugins/gdd_architect.py:376:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:378:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:380:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:388:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:399:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:402:80: E501 line too long (85 > 79 characters)
+./plugins/gdd_architect.py:410:80: E501 line too long (122 > 79 characters)
+./plugins/gdd_architect.py:412:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:418:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:420:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:421:80: E501 line too long (88 > 79 characters)
+./plugins/gdd_architect.py:424:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:427:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:429:1: W293 blank line contains whitespace
+./plugins/gdd_architect.py:434:80: E501 line too long (95 > 79 characters)
+./scripts/apply_preset.py:5:1: E302 expected 2 blank lines, found 1
+./scripts/apply_preset.py:21:1: E305 expected 2 blank lines after class or function definition, found 1
+./scripts/apply_preset.py:25:34: W292 no newline at end of file
+./scripts/diagnose.py:5:1: E302 expected 2 blank lines, found 1
+./scripts/diagnose.py:9:1: W293 blank line contains whitespace
+./scripts/diagnose.py:13:29: E701 multiple statements on one line (colon)
+./scripts/diagnose.py:14:17: E701 multiple statements on one line (colon)
+./scripts/diagnose.py:19:1: E305 expected 2 blank lines after class or function definition, found 1
+./scripts/diagnose.py:20:15: W292 no newline at end of file
+./scripts/emergency_cleanup.py:1:1: F401 'os' imported but unused
+./scripts/emergency_cleanup.py:2:1: F401 'shutil' imported but unused
+./scripts/emergency_cleanup.py:5:1: E302 expected 2 blank lines, found 1
+./scripts/emergency_cleanup.py:13:24: E701 multiple statements on one line (colon)
+./scripts/emergency_cleanup.py:14:21: E722 do not use bare 'except'
+./scripts/emergency_cleanup.py:14:27: E701 multiple statements on one line (colon)
+./scripts/emergency_cleanup.py:17:1: E305 expected 2 blank lines after class or function definition, found 1
+./scripts/emergency_cleanup.py:18:14: W292 no newline at end of file
+./scripts/init_config.py:1:1: F401 'os' imported but unused
+./scripts/init_config.py:3:1: F401 'json' imported but unused
+./scripts/init_config.py:4:1: F401 'shutil' imported but unused
+./scripts/init_config.py:7:1: E302 expected 2 blank lines, found 1
+./scripts/init_config.py:10:67: W291 trailing whitespace
+./scripts/init_config.py:11:64: W291 trailing whitespace
+./scripts/init_config.py:14:1: W293 blank line contains whitespace
+./scripts/init_config.py:29:1: E302 expected 2 blank lines, found 1
+./scripts/init_config.py:33:1: W293 blank line contains whitespace
+./scripts/init_config.py:39:1: W293 blank line contains whitespace
+./scripts/init_config.py:46:1: E302 expected 2 blank lines, found 1
+./scripts/init_config.py:55:1: E305 expected 2 blank lines after class or function definition, found 1
+./scripts/init_config.py:62:20: W292 no newline at end of file
+./scripts/rag_indexer.py:4:1: E302 expected 2 blank lines, found 1
+./scripts/rag_indexer.py:9:1: W293 blank line contains whitespace
+./scripts/rag_indexer.py:12:1: W293 blank line contains whitespace
+./scripts/rag_indexer.py:15:1: W293 blank line contains whitespace
+./scripts/rag_indexer.py:19:1: W293 blank line contains whitespace
+./scripts/rag_indexer.py:22:1: E305 expected 2 blank lines after class or function definition, found 1
+./scripts/rag_indexer.py:30:1: W293 blank line contains whitespace
+./scripts/rag_indexer.py:31:43: W292 no newline at end of file

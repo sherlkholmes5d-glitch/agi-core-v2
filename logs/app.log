@@ -508,3 +508,21 @@
 2026-04-23 05:00:01,975 - AGICore - INFO - ✅ LM Studio connected at http://127.0.0.1:1234
 2026-04-23 05:00:02,663 - AGICore - INFO - ✅ LM Studio connected at http://127.0.0.1:1234
 2026-04-23 05:00:05,616 - AGICore - INFO - 👋 Shutting down...
+2026-04-24 00:23:17,241 - AGICore - INFO - 🚀 Initializing AGI Core...
+2026-04-24 00:23:17,262 - AGICore - INFO - ✅ Configuration loaded from /workspace/config/config.yaml
+2026-04-24 00:23:17,524 - AGICore - WARNING - ⚠️ LM Studio not detected at http://127.0.0.1:1234. Please start LM Studio Server.
+2026-04-24 00:23:17,525 - AGICore - INFO - 🌐 Visual Router available at http://localhost:8080
+2026-04-24 00:23:17,527 - AGICore - INFO - ✅ System Ready. Interface opened in browser.
+2026-04-24 00:23:17,527 - AGICore - INFO - Press Ctrl+C to stop.
+2026-04-24 00:23:17,527 - AGICore - INFO - 🔄 Entering background task loop...
+2026-04-24 00:23:23,300 - AGICore - WARNING - ⚠️ LM Studio not detected at http://127.0.0.1:1234. Please start LM Studio Server.
+2026-04-24 00:23:32,422 - AGICore - INFO - 🚀 Initializing AGI Core...
+2026-04-24 00:23:32,455 - AGICore - INFO - ✅ Configuration loaded from /workspace/config/config.yaml
+2026-04-24 00:23:32,475 - AGICore - INFO - 🤖 Orchestrator initialized
+2026-04-24 00:24:44,062 - AGICore - INFO - 🚀 Initializing AGI Core...
+2026-04-24 00:24:44,085 - AGICore - INFO - ✅ Configuration loaded from /workspace/config/config.yaml
+2026-04-24 00:24:44,361 - AGICore - WARNING - ⚠️ LM Studio not detected at http://127.0.0.1:1234. Please start LM Studio Server.
+2026-04-24 00:24:44,362 - AGICore - INFO - 🌐 Visual Router available at http://localhost:8080
+2026-04-24 00:24:44,363 - AGICore - INFO - ✅ System Ready. Interface opened in browser.
+2026-04-24 00:24:44,363 - AGICore - INFO - Press Ctrl+C to stop.
+2026-04-24 00:24:44,363 - AGICore - INFO - 🔄 Entering background task loop...
